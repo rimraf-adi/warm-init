@@ -24,10 +24,19 @@ from tone_donor.text import normalize
 from tone_donor.vaani_stream import _load_dotenv
 
 
+def backbone_name():
+    return os.environ.get("BACKBONE", "hi")
+
+
 def load_encoder(tok):
+    """BACKBONE=hi: per-language Hindi checkpoint (115M encoder). BACKBONE=multi: multilingual
+    ai4bharat/IndicConformer (628M params, 24 blocks, 22 languages)."""
     import nemo.collections.asr as nemo_asr
-    p = hf_hub_download("ai4bharat/indicconformer_stt_hi_hybrid_ctc_rnnt_large",
-                        "indicconformer_stt_hi_hybrid_rnnt_large.nemo", token=tok)
+    if backbone_name() == "multi":
+        p = hf_hub_download("ai4bharat/IndicConformer", "IndicConformer.nemo", token=tok)
+    else:
+        p = hf_hub_download("ai4bharat/indicconformer_stt_hi_hybrid_ctc_rnnt_large",
+                            "indicconformer_stt_hi_hybrid_rnnt_large.nemo", token=tok)
     m = nemo_asr.models.EncDecHybridRNNTCTCBPEModel.restore_from(p, map_location="cuda").eval()
     return m
 

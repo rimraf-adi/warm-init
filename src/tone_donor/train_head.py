@@ -18,7 +18,7 @@ import sys
 import editdistance
 import torch
 
-from tone_donor.prep_features import load_encoder
+from tone_donor.prep_features import backbone_name, load_encoder
 from tone_donor.runlog import log_run, read_runs
 from tone_donor.text import ASPIRATES_DEVANAGARI, PLAIN_DEVANAGARI, charset_cer, normalize, tone_cer
 from tone_donor.vaani_stream import _load_dotenv
@@ -45,6 +45,9 @@ def build_head(model, init, seed):
     torch.nn.init.xavier_uniform_(newW.unsqueeze(-1))
     newb = torch.zeros(len(cols_d))
     copied = 0
+    if init == "own":
+        newW, newb = W[cols_d, :, 0].clone(), b[cols_d].clone()
+        copied = len(sp_d)
     if init == "hindi":
         h_index = {s: i for i, s in enumerate(sp_h)}
         for j, s in enumerate(sp_d):
@@ -117,8 +120,8 @@ def train_one(model, data, init, hours, seed):
     print(f"init={init} hours={tot/3600:.3f} utts={len(sel)} copied {copied}/{nd} tokens", flush=True)
     opt = torch.optim.AdamW(head.parameters(), lr=LR, weight_decay=0.0)
     ctc = torch.nn.CTCLoss(blank=head.out_features - 1, zero_infinity=True)
-    best, best_state, hist = 1e9, None, []
-    for ep in range(EPOCHS):
+    best, best_state, hist = 1e9, {k: v.clone() for k, v in head.state_dict().items()}, [{"epoch": -1, "train_loss": None, "dev_cer": None}]
+    for ep in range(0 if init == "own" else EPOCHS):
         head.train()
         tl = nb = 0
         idx = list(range(len(sel)))
@@ -140,35 +143,39 @@ def train_one(model, data, init, hours, seed):
         if m["cer"] < best:
             best = m["cer"]
             best_state = {k: v.clone() for k, v in head.state_dict().items()}
-    print(f"  last epoch loss {hist[-1]['train_loss']:.3f} best dev300 CER {best:.4f}", flush=True)
+    print(f"  last epoch loss {hist[-1]['train_loss']} best dev300 CER {best:.4f}", flush=True)
     head.load_state_dict(best_state)
     head.eval()
     res = {}
     for name, items in (("dev", dev), ("test", test)):
         res[name], pairs = evaluate(model, head, items)
-    rid = f"phase1-dogri-{init}-{hours}h-s{seed}"
+    tag = backbone_name()
+    rid = f"phase1-{tag}-dogri-{init}-{hours}h-s{seed}"
     os.makedirs("results/phase1", exist_ok=True)
     with open(f"results/phase1/{rid}.jsonl", "w", encoding="utf-8") as f:
         for r, h in pairs:
             f.write(json.dumps({"ref": r, "hyp": h}, ensure_ascii=False) + "\n")
     t = res["test"]
-    log_run(stage="phase1", hypothesis="H2", target="dogri", donor="hi" if init == "hindi" else None,
-            init=init, budget_h=round(tot / 3600, 3), seed=seed, backbone="indicconformer_hi_frozen_encoder",
+    log_run(stage="phase1", hypothesis="H2", target="dogri", donor={"hindi": "hi", "own": "doi"}.get(init),
+            init=init, budget_h=round(tot / 3600, 3), seed=seed, backbone=("indicconformer_multi_frozen_encoder" if tag == "multi" else "indicconformer_hi_frozen_encoder"),
             split="speaker-disjoint test (IndicVoices valid, alternating speakers)", n_utts=len(test),
             wer=t["wer"], cer=t["cer"], tone_cer=t["ha_tone_cer"], tone_chars=t["n_ha"],
             aspirate_cer=t["aspirate_cer"], plain_cer=t["plain_cer"],
             config={"epochs": EPOCHS, "lr": LR, "bs": BS, "trained": "ctc head columns only", "tokens_copied": copied,
                     "requested_hours": hours, "dev": res["dev"], "history_last": hist[-3:],
                     "apostrophe": "dropped from text", "tone_chars": "ha + virama only",
-                    "model_selection": "best dev-300 CER", "impl": "gpu-cached v2 (same protocol as v1)"},
+                    "model_selection": "best dev-300 CER", "impl": "gpu-cached v2 (same protocol as v1)", "backbone_tag": tag},
             artifacts={"predictions": f"results/phase1/{rid}.jsonl"},
             notes="kill test arm; encoder frozen; head-only training")
     print("TEST", json.dumps(t), flush=True)
 
 
 def already_done(init, hours, seed):
+    tag = backbone_name()
     for r in read_runs():
         if r["stage"] != "phase1" or r["status"] != "done" or r["init"] != init or r["seed"] != seed:
+            continue
+        if r["config"].get("backbone_tag", "hi") != tag:
             continue
         req = r["config"].get("requested_hours")
         if req is not None and abs(req - hours) < 1e-6:
