@@ -1,0 +1,486 @@
+{
+ "Mizo": {
+  "rows": 150,
+  "hours": 0.258,
+  "scripts": [
+   [
+    "LATIN",
+    9561
+   ]
+  ],
+  "top_tags": [
+   [
+    "<pause>",
+    228
+   ],
+   [
+    "[inhaling]",
+    80
+   ],
+   [
+    "<noise>",
+    64
+   ],
+   [
+    "</noise>",
+    64
+   ],
+   [
+    "<static>",
+    47
+   ],
+   [
+    "</static>",
+    47
+   ],
+   [
+    "[inaudible]",
+    14
+   ],
+   [
+    "{motor}",
+    9
+   ]
+  ]
+ },
+ "Wancho": {
+  "rows": 150,
+  "hours": 0.214,
+  "scripts": [
+   [
+    "LATIN",
+    8001
+   ]
+  ],
+  "top_tags": [
+   [
+    "<pause>",
+    184
+   ],
+   [
+    "[unintelligible]",
+    65
+   ],
+   [
+    "{colour}",
+    22
+   ],
+   [
+    "<noise>",
+    15
+   ],
+   [
+    "</noise>",
+    15
+   ],
+   [
+    "[inhaling]",
+    15
+   ],
+   [
+    "{light}",
+    7
+   ],
+   [
+    "{table}",
+    6
+   ]
+  ]
+ },
+ "Tulu": {
+  "rows": 150,
+  "hours": 0.231,
+  "scripts": [
+   [
+    "KANNADA",
+    5275
+   ]
+  ],
+  "top_tags": [
+   [
+    "<pause>",
+    35
+   ],
+   [
+    "<noise>",
+    16
+   ],
+   [
+    "</noise>",
+    16
+   ],
+   [
+    "{color}",
+    9
+   ],
+   [
+    "[unintelligible]",
+    8
+   ],
+   [
+    "{building}",
+    7
+   ],
+   [
+    "{rikshaw}",
+    7
+   ],
+   [
+    "<static_noise>",
+    6
+   ]
+  ]
+ },
+ "Chhattisgarhi": {
+  "rows": 150,
+  "hours": 0.282,
+  "scripts": [
+   [
+    "DEVANAGARI",
+    5352
+   ]
+  ],
+  "top_tags": [
+   [
+    "<noise>",
+    66
+   ],
+   [
+    "</noise>",
+    66
+   ],
+   [
+    "<pause>",
+    55
+   ],
+   [
+    "[unintelligible]",
+    28
+   ],
+   [
+    "[breathing]",
+    18
+   ],
+   [
+    "{light}",
+    9
+   ],
+   [
+    "{bike}",
+    6
+   ],
+   [
+    "{bank}",
+    6
+   ]
+  ]
+ },
+ "Kokborok": {
+  "rows": 150,
+  "hours": 0.162,
+  "scripts": [
+   [
+    "LATIN",
+    7348
+   ]
+  ],
+  "top_tags": [
+   [
+    "<static_noise>",
+    73
+   ],
+   [
+    "</static_noise>",
+    73
+   ],
+   [
+    "<noise>",
+    5
+   ],
+   [
+    "</noise>",
+    5
+   ],
+   [
+    "<bird_sound>",
+    5
+   ],
+   [
+    "</bird_sound>",
+    5
+   ],
+   [
+    "{building}",
+    3
+   ],
+   [
+    "{colour}",
+    3
+   ]
+  ]
+ },
+ "Sumi": {
+  "rows": 150,
+  "hours": 0.158,
+  "scripts": [
+   [
+    "LATIN",
+    6148
+   ]
+  ],
+  "top_tags": [
+   [
+    "<static noise>",
+    48
+   ],
+   [
+    "</static noise>",
+    48
+   ],
+   [
+    "<static_noise>",
+    35
+   ],
+   [
+    "</static_noise>",
+    35
+   ],
+   [
+    "{bike}",
+    4
+   ],
+   [
+    "{blue}",
+    3
+   ],
+   [
+    "{signboard}",
+    3
+   ],
+   [
+    "{yellow}",
+    3
+   ]
+  ]
+ },
+ "Garo": {
+  "rows": 150,
+  "hours": 0.187,
+  "scripts": [
+   [
+    "LATIN",
+    6680
+   ]
+  ],
+  "top_tags": [
+   [
+    "<noise>",
+    134
+   ],
+   [
+    "</noise>",
+    134
+   ],
+   [
+    "[unintelligible]",
+    10
+   ],
+   [
+    "[inhaling]",
+    10
+   ],
+   [
+    "<static>",
+    3
+   ],
+   [
+    "</static>",
+    3
+   ],
+   [
+    "<bird_sound>",
+    3
+   ],
+   [
+    "</bird_sound>",
+    3
+   ]
+  ]
+ },
+ "Chakma": {
+  "rows": 150,
+  "hours": 0.141,
+  "scripts": [
+   [
+    "LATIN",
+    5909
+   ]
+  ],
+  "top_tags": [
+   [
+    "<noise>",
+    32
+   ],
+   [
+    "</noise>",
+    32
+   ],
+   [
+    "<bird_sound>",
+    4
+   ],
+   [
+    "</bird_sound>",
+    4
+   ],
+   [
+    "<static>",
+    3
+   ],
+   [
+    "</static>",
+    3
+   ],
+   [
+    "[unintelligible]",
+    2
+   ],
+   [
+    "{building}",
+    2
+   ]
+  ]
+ },
+ "Garhwali": {
+  "rows": 150,
+  "hours": 0.241,
+  "scripts": [
+   [
+    "DEVANAGARI",
+    5622
+   ]
+  ],
+  "top_tags": [
+   [
+    "<noise>",
+    51
+   ],
+   [
+    "</noise>",
+    51
+   ],
+   [
+    "[breathing]",
+    47
+   ],
+   [
+    "[unintelligible]",
+    10
+   ],
+   [
+    "{photo}",
+    9
+   ],
+   [
+    "{color}",
+    5
+   ],
+   [
+    "{building}",
+    5
+   ],
+   [
+    "{car}",
+    5
+   ]
+  ]
+ },
+ "Kumaoni": {
+  "rows": 150,
+  "hours": 0.313,
+  "scripts": [
+   [
+    "DEVANAGARI",
+    7368
+   ]
+  ],
+  "top_tags": [
+   [
+    "[breathing]",
+    69
+   ],
+   [
+    "<noise>",
+    66
+   ],
+   [
+    "</noise>",
+    66
+   ],
+   [
+    "<pause>",
+    31
+   ],
+   [
+    "{color}",
+    29
+   ],
+   [
+    "{बहुत}",
+    23
+   ],
+   [
+    "[inhaling]",
+    20
+   ],
+   [
+    "[unintelligible]",
+    11
+   ]
+  ]
+ },
+ "Nagamese": {
+  "rows": 150,
+  "hours": 0.22,
+  "scripts": [
+   [
+    "LATIN",
+    9225
+   ]
+  ],
+  "top_tags": [
+   [
+    "<noise>",
+    35
+   ],
+   [
+    "</noise>",
+    35
+   ],
+   [
+    "<static_noise>",
+    34
+   ],
+   [
+    "</static_noise>",
+    34
+   ],
+   [
+    "{side}",
+    31
+   ],
+   [
+    "{colour}",
+    26
+   ],
+   [
+    "<pause>",
+    11
+   ],
+   [
+    "{photo}",
+    8
+   ]
+  ]
+ }
+}
