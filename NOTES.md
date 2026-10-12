@@ -137,3 +137,23 @@ Per-epoch model selection used the full metric with a pure-Python edit-distance 
 - The cached features used by the Phase 1 runs (`/home/vnit/data/dogri*`, built by streaming) have the same dev and test sets and 2,382 train utterances: the feature script appended the first utterance of the next speaker before stopping. Only budgets that reach the end of the train file (5 h) are affected; the 0.25 h and 1 h runs use an identical prefix. Future extractions should read the manifests.
 - Text fields (over all 4,279 rows): `text` equals `normalized` in every row; `verbatim` differs in 1,483 rows and has fewer apostrophes (1,385 vs 1,849); the `unsanitized_*` fields keep bracket annotations and punctuation. Experiments score on `text` (identical to `normalized`), normalised by `tone_donor.text.normalize` with apostrophes dropped.
 - Composition differences between splits (from the manifest columns): dev gender is balanced (469 M / 460 F), test is 727 M / 242 F, train 1,277 M / 1,104 F. Task types differ between splits (test: Agriculture, Biking, Traveling; train: Basic, Cooking, District Specific). The train sample is the first speakers in shard order, not a random draw. Limitation: the test set is not matched to train in gender or domain; speaker-disjointness is the only guarantee. A random-speaker train draw needs more shards (budget allows it, up to 50 GB total).
+
+### 2026-10-13: Step 0 analysis, head-only runs on the Hindi-only encoder (`python -m tone_donor.analyze_phase1`; output `results/phase1/analysis_indicconformer_hi_frozen_encoder.json`)
+Setup: 18 runs (random vs Hindi-copied Dogri CTC head columns, budgets 0.25 / 1 / 5 h, seeds 0-2), frozen 115M Hindi encoder, speaker-disjoint test set of 969 utterances, tone characters = ह plus its following virama (4,852 positions), control characters = गपम chosen to match the tone count (4,916). Bootstrap resamples test utterances (2,000 draws, seeds pooled); it does not include seed-to-seed variance.
+
+| budget h | arm | CER | tone CER | control CER | tone-control [95% CI] | aspirate | plain |
+|---|---|---|---|---|---|---|---|
+| 0.25 | hindi | 0.333 | 0.499 | 0.237 | +0.263 [+0.239, +0.285] | 0.570 | 0.241 |
+| 0.25 | random | 0.368 | 0.553 | 0.260 | +0.293 [+0.269, +0.317] | 0.695 | 0.280 |
+| 1.0 | hindi | 0.295 | 0.408 | 0.209 | +0.199 [+0.176, +0.220] | 0.545 | 0.206 |
+| 1.0 | random | 0.303 | 0.413 | 0.206 | +0.208 [+0.186, +0.228] | 0.574 | 0.212 |
+| 5.0 | hindi | 0.263 | 0.339 | 0.175 | +0.164 [+0.144, +0.186] | 0.396 | 0.173 |
+| 5.0 | random | 0.262 | 0.322 | 0.177 | +0.146 [+0.126, +0.165] | 0.406 | 0.175 |
+
+Hindi minus random (paired bootstrap): CER -0.035 [-0.038, -0.033] at 0.25 h, -0.008 [-0.010, -0.006] at 1 h, +0.001 [-0.001, +0.002] at 5 h. Tone CER -0.053 [-0.065, -0.042], -0.005 [-0.013, +0.002], +0.017 [+0.011, +0.022]. Tone-minus-control -0.030 [-0.044, -0.015], -0.009 [-0.018, -0.000], +0.018 [+0.012, +0.025].
+
+Reading (mine):
+1. Tone characters (ह and its virama) are error-prone in every arm, including the random-init arm with no donor. Rule (a) of the pre-registered Gate 1 is met, but the excess does not depend on a non-tonal donor, and the control set is easier per character than ह, so this alone does not support a tone-specific effect. Aspirated letters (घझढधभ) also err about twice as often as plain ones (0.40 vs 0.17 at 5 h), but they are 12 times rarer in the test text (843 vs 10,238 positions), so frequency is a confound.
+2. Hindi-init helps at 0.25 h, mostly on tone characters too, which is the opposite of what H2 predicts for a non-tonal donor. The advantage disappears by 1 h and flips to a small disadvantage on tone characters at 5 h (tone CER 0.339 vs 0.322 on seed means, per-seed values 0.326/0.351/0.339 vs 0.331/0.318/0.318). The seed spread is about as large as the difference (a seed-level t-test gives roughly p of 0.1), so the 5 h reversal is not established.
+3. Rule (b) of Gate 1 (the excess being smaller with the model's own Dogri head) cannot be tested on this backbone because the Hindi-only encoder has no Dogri head. Gate 1 is therefore undecided here, and the multilingual backbone is where it is decided.
+Caveats: single frozen-encoder linear head only; one test set with a different gender and task mix from train; Dogri was seen in IndicConformer's training; seeds are 3.

@@ -1,7 +1,7 @@
 # Results
 
 Generated from `results/runs.jsonl`; do not edit by hand.
-Runs logged: 18
+Runs logged: 27
 
 ## Stage: phase0-smoke
 
@@ -25,10 +25,19 @@ Runs logged: 18
 | phase1-dogri-hindi-1791834921 | dogri | hi | hindi | 0.262 | 1 | 0.669 | 0.334 | 0.496 | 4852 |  | 969 | done | 7f5ba89* |
 | phase1-dogri-hindi-1791835979 | dogri | hi | hindi | 0.262 | 2 | 0.668 | 0.333 | 0.501 | 4852 |  | 969 | done | 7f5ba89* |
 | phase1-dogri-hindi-1791837190 | dogri | hi | hindi | 1.020 | 0 | 0.603 | 0.294 | 0.403 | 4852 |  | 969 | done | 7f5ba89* |
+| phase1-dogri-hindi-1791838763 | dogri | hi | hindi | 1.020 | 1 | 0.607 | 0.296 | 0.405 | 4852 |  | 969 | done | a08bc1b* |
+| phase1-dogri-hindi-1791839556 | dogri | hi | hindi | 1.020 | 2 | 0.605 | 0.295 | 0.415 | 4852 |  | 969 | done | 28e6dc8* |
+| phase1-dogri-hindi-1791839782 | dogri | hi | hindi | 5.016 | 0 | 0.550 | 0.261 | 0.326 | 4852 |  | 969 | done | 28e6dc8* |
+| phase1-dogri-hindi-1791840011 | dogri | hi | hindi | 5.016 | 1 | 0.555 | 0.263 | 0.351 | 4852 |  | 969 | done | 28e6dc8* |
+| phase1-dogri-hindi-1791840238 | dogri | hi | hindi | 5.016 | 2 | 0.555 | 0.264 | 0.339 | 4852 |  | 969 | done | 28e6dc8* |
 | phase1-dogri-random-1791833301 | dogri |  | random | 0.262 | 0 | 0.713 | 0.369 | 0.561 | 4852 |  | 969 | done | 7f5ba89* |
 | phase1-dogri-random-1791834347 | dogri |  | random | 0.262 | 1 | 0.703 | 0.365 | 0.533 | 4852 |  | 969 | done | 7f5ba89* |
 | phase1-dogri-random-1791835402 | dogri |  | random | 0.262 | 2 | 0.717 | 0.369 | 0.564 | 4852 |  | 969 | done | 7f5ba89* |
 | phase1-dogri-random-1791836562 | dogri |  | random | 1.020 | 0 | 0.613 | 0.303 | 0.413 | 4852 |  | 969 | done | 7f5ba89* |
 | phase1-dogri-random-1791838198 | dogri |  | random | 1.020 | 1 | 0.612 | 0.302 | 0.411 | 4852 |  | 969 | done | 0a8bbf3* |
+| phase1-dogri-random-1791838850 | dogri |  | random | 1.020 | 2 | 0.613 | 0.303 | 0.415 | 4852 |  | 969 | done | a08bc1b* |
+| phase1-dogri-random-1791839668 | dogri |  | random | 5.016 | 0 | 0.548 | 0.262 | 0.331 | 4852 |  | 969 | done | 28e6dc8* |
+| phase1-dogri-random-1791839898 | dogri |  | random | 5.016 | 1 | 0.546 | 0.261 | 0.318 | 4852 |  | 969 | done | 28e6dc8* |
+| phase1-dogri-random-1791840126 | dogri |  | random | 5.016 | 2 | 0.552 | 0.263 | 0.318 | 4852 |  | 969 | done | 28e6dc8* |
 
 `*` after a commit means the working tree had uncommitted changes when the run started.
