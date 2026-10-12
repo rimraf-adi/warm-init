@@ -216,3 +216,23 @@ Test: for donors Hindi and Punjabi, Dogri tokens the donor lacks are filled with
 
 CER at 0.25 h: random 0.185, donor-hi 0.193 / +mean 0.196 / +comp 0.189, donor-pa 0.205 / +mean 0.209 / +comp 0.206.
 Reading (mine): composition fill lowers tone CER by about 0.01 and mean fill raises it by about 0.01, but none closes the roughly 0.06 gap to random init. The exploratory explanation that unmatched (tone-bearing) tokens at random init cause the penalty is therefore not supported as the main cause. Candidates not yet tested: the copied blank column, the scale of copied rows versus random rows, and interference between the donor's rows and the Dogri-specific directions the multilingual encoder already contains (Dogri was in its training). The tonal donor still does no better than the non-tonal ones in any fill setting.
+
+### 2026-10-13: blank-column control and error types (mechanism of the head-copy penalty)
+Control: the same donors with the blank column left at its random init (`+noblank`), 0.25 h, 3 seeds. Tone CER: donor-hi 0.243 -> 0.208 (+noblank) and 0.198 (+comp+noblank); donor-pa 0.244 -> 0.216 (+noblank) and 0.218 (+comp+noblank); random 0.175. CER: donor-hi 0.193 -> 0.198 / 0.201, donor-pa 0.205 -> 0.213 / 0.215, random 0.185. So the copied blank accounts for roughly half of the tone-character penalty and a small part of the overall change in the other direction.
+
+Error types on the 14,556 tone-character positions (3 seeds pooled; `python -m tone_donor.error_types`, output `results/phase1/error_types_multi_0.25h.json`):
+
+| arm | tone deleted | tone substituted | tone error | deletion rate, all chars | insertions per 100 chars |
+|---|---|---|---|---|---|
+| random | 0.121 | 0.055 | 0.175 | 0.080 | 4.84 |
+| hindi (copied) | 0.173 | 0.069 | 0.243 | 0.095 | 4.26 |
+| donor-hi+noblank | 0.134 | 0.074 | 0.208 | 0.075 | 6.22 |
+| donor-hi+comp+noblank | 0.123 | 0.075 | 0.198 | 0.068 | 7.17 |
+| donor-pa (copied) | 0.179 | 0.066 | 0.244 | 0.103 | 4.11 |
+| donor-pa+noblank | 0.133 | 0.083 | 0.216 | 0.080 | 6.42 |
+
+Reading (mine):
+- Most of the extra tone-character error with a copied head is deletion of ह and its virama (0.121 -> 0.173 for Hindi, 0.179 for Punjabi); overall deletion also rises (0.080 -> 0.095 / 0.103). With the donor's blank row left random, tone deletions return to about the random level (0.133-0.134) and overall insertions go up, so the donor blank shifts the model toward emitting nothing, which hits short, acoustically weak tokens first.
+- This is a calibration effect of copying a CTC blank row. It is the same for the tonal donor (Punjabi) and the non-tonal donors, so it says nothing about tone. The random-init arm also deletes ह/virama more than any other class (0.121 deleted vs 0.055 substituted), consistent with those characters being weak in the audio.
+- Status of the hypotheses on this setup (head-only, frozen multilingual encoder, Dogri): H2 as phrased (a same-script non-tonal donor concentrates errors on tone contexts) is not distinguishable from a generic copied-head effect; H3 (a tonal donor wins at low data) is not supported; no donor head beats random init at any budget on CER. Head-copy initialisation is not where a family effect should be looked for. The encoder-adapter and zero-shot-sweep steps of the roadmap are next.
+- Not yet tested: scaling of copied rows, other fills of the blank, other targets (Punjabi, Bodo), unseen languages.

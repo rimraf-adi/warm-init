@@ -1,0 +1,62 @@
+{
+ "random": {
+  "ins_total": 14380,
+  "all_chars": 296895,
+  "all_err": 40511,
+  "all_del": 23777,
+  "tone_n": 14556,
+  "tone_M": 12002,
+  "tone_D": 1754,
+  "tone_S": 800
+ },
+ "hindi": {
+  "ins_total": 12637,
+  "all_chars": 296895,
+  "all_err": 44608,
+  "all_del": 28213,
+  "tone_n": 14556,
+  "tone_M": 11026,
+  "tone_D": 2524,
+  "tone_S": 1006
+ },
+ "donor-hi+noblank": {
+  "ins_total": 18456,
+  "all_chars": 296895,
+  "all_err": 40353,
+  "all_del": 22188,
+  "tone_n": 14556,
+  "tone_M": 11528,
+  "tone_D": 1954,
+  "tone_S": 1074
+ },
+ "donor-hi+comp+noblank": {
+  "ins_total": 21293,
+  "all_chars": 296895,
+  "all_err": 38374,
+  "all_del": 20131,
+  "tone_n": 14556,
+  "tone_M": 11672,
+  "tone_D": 1792,
+  "tone_S": 1092
+ },
+ "donor-pa": {
+  "ins_total": 12200,
+  "all_chars": 296895,
+  "all_err": 48527,
+  "all_del": 30576,
+  "tone_n": 14556,
+  "tone_M": 10998,
+  "tone_D": 2603,
+  "tone_S": 955
+ },
+ "donor-pa+noblank": {
+  "ins_total": 19070,
+  "all_chars": 296895,
+  "all_err": 44210,
+  "all_del": 23836,
+  "tone_n": 14556,
+  "tone_M": 11408,
+  "tone_D": 1933,
+  "tone_S": 1215
+ }
+}

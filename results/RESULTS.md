@@ -1,7 +1,7 @@
 # Results
 
 Generated from `results/runs.jsonl`; do not edit by hand.
-Runs logged: 46
+Runs logged: 107
 
 ## Stage: phase0-smoke
 
@@ -20,6 +20,67 @@ Runs logged: 46
 
 | run | target | donor | init | budget h | seed | WER | CER | tone CER | tone chars | CI | utts | status | commit |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| phase1-dogri-donor-bn-1791843299 | dogri | bn | donor-bn | 0.262 | 0 | 0.446 | 0.202 | 0.240 | 4852 |  | 969 | done | 0b23bd0* |
+| phase1-dogri-donor-bn-1791843661 | dogri | bn | donor-bn | 0.262 | 1 | 0.444 | 0.202 | 0.241 | 4852 |  | 969 | done | 0b23bd0* |
+| phase1-dogri-donor-bn-1791844036 | dogri | bn | donor-bn | 0.262 | 2 | 0.445 | 0.202 | 0.246 | 4852 |  | 969 | done | 0b23bd0* |
+| phase1-dogri-donor-bn-1791844416 | dogri | bn | donor-bn | 1.020 | 0 | 0.368 | 0.168 | 0.151 | 4852 |  | 969 | done | 0b23bd0* |
+| phase1-dogri-donor-bn-1791844806 | dogri | bn | donor-bn | 1.020 | 1 | 0.369 | 0.168 | 0.150 | 4852 |  | 969 | done | 0b23bd0* |
+| phase1-dogri-donor-bn-1791845201 | dogri | bn | donor-bn | 1.020 | 2 | 0.368 | 0.168 | 0.152 | 4852 |  | 969 | done | 0b23bd0* |
+| phase1-dogri-donor-hi-1791842942 | dogri | hi | donor-hi | 0.262 | 0 | 0.431 | 0.193 | 0.241 | 4852 |  | 969 | done | 0b23bd0* |
+| phase1-dogri-donor-hi+comp-1791845618 | dogri | hi | donor-hi+comp | 0.262 | 0 | 0.423 | 0.189 | 0.232 | 4852 |  | 969 | done | e47bd39* |
+| phase1-dogri-donor-hi+comp-1791845976 | dogri | hi | donor-hi+comp | 0.262 | 1 | 0.422 | 0.189 | 0.233 | 4852 |  | 969 | done | e47bd39* |
+| phase1-dogri-donor-hi+comp-1791846336 | dogri | hi | donor-hi+comp | 0.262 | 2 | 0.423 | 0.190 | 0.232 | 4852 |  | 969 | done | e47bd39* |
+| phase1-dogri-donor-hi+comp-1791846705 | dogri | hi | donor-hi+comp | 1.020 | 0 | 0.369 | 0.166 | 0.152 | 4852 |  | 969 | done | e47bd39* |
+| phase1-dogri-donor-hi+comp-1791847086 | dogri | hi | donor-hi+comp | 1.020 | 1 | 0.366 | 0.165 | 0.147 | 4852 |  | 969 | done | e47bd39* |
+| phase1-dogri-donor-hi+comp-1791847466 | dogri | hi | donor-hi+comp | 1.020 | 2 | 0.366 | 0.165 | 0.146 | 4852 |  | 969 | done | e47bd39* |
+| phase1-dogri-donor-hi+comp+noblank-1791847961 | dogri | hi | donor-hi+comp+noblank | 0.262 | 0 | 0.451 | 0.201 | 0.197 | 4852 |  | 969 | done | d76e001* |
+| phase1-dogri-donor-hi+comp+noblank-1791848339 | dogri | hi | donor-hi+comp+noblank | 0.262 | 1 | 0.451 | 0.201 | 0.202 | 4852 |  | 969 | done | d76e001* |
+| phase1-dogri-donor-hi+comp+noblank-1791848715 | dogri | hi | donor-hi+comp+noblank | 0.262 | 2 | 0.449 | 0.200 | 0.195 | 4852 |  | 969 | done | d76e001* |
+| phase1-dogri-donor-hi+mean-1791845527 | dogri | hi | donor-hi+mean | 0.262 | 0 | 0.436 | 0.196 | 0.256 | 4852 |  | 969 | done | e47bd39* |
+| phase1-dogri-donor-hi+mean-1791845886 | dogri | hi | donor-hi+mean | 0.262 | 1 | 0.435 | 0.195 | 0.256 | 4852 |  | 969 | done | e47bd39* |
+| phase1-dogri-donor-hi+mean-1791846245 | dogri | hi | donor-hi+mean | 0.262 | 2 | 0.436 | 0.196 | 0.256 | 4852 |  | 969 | done | e47bd39* |
+| phase1-dogri-donor-hi+mean-1791846609 | dogri | hi | donor-hi+mean | 1.020 | 0 | 0.369 | 0.167 | 0.160 | 4852 |  | 969 | done | e47bd39* |
+| phase1-dogri-donor-hi+mean-1791846990 | dogri | hi | donor-hi+mean | 1.020 | 1 | 0.369 | 0.166 | 0.158 | 4852 |  | 969 | done | e47bd39* |
+| phase1-dogri-donor-hi+mean-1791847370 | dogri | hi | donor-hi+mean | 1.020 | 2 | 0.369 | 0.166 | 0.157 | 4852 |  | 969 | done | e47bd39* |
+| phase1-dogri-donor-hi+noblank-1791847862 | dogri | hi | donor-hi+noblank | 0.262 | 0 | 0.449 | 0.200 | 0.210 | 4852 |  | 969 | done | d76e001* |
+| phase1-dogri-donor-hi+noblank-1791848244 | dogri | hi | donor-hi+noblank | 0.262 | 1 | 0.446 | 0.198 | 0.208 | 4852 |  | 969 | done | d76e001* |
+| phase1-dogri-donor-hi+noblank-1791848620 | dogri | hi | donor-hi+noblank | 0.262 | 2 | 0.444 | 0.197 | 0.206 | 4852 |  | 969 | done | d76e001* |
+| phase1-dogri-donor-mr-1791843121 | dogri | mr | donor-mr | 0.262 | 0 | 0.438 | 0.196 | 0.246 | 4852 |  | 969 | done | 0b23bd0* |
+| phase1-dogri-donor-mr-1791843478 | dogri | mr | donor-mr | 0.262 | 1 | 0.437 | 0.197 | 0.251 | 4852 |  | 969 | done | 0b23bd0* |
+| phase1-dogri-donor-mr-1791843850 | dogri | mr | donor-mr | 0.262 | 2 | 0.438 | 0.197 | 0.251 | 4852 |  | 969 | done | 0b23bd0* |
+| phase1-dogri-donor-mr-1791844226 | dogri | mr | donor-mr | 1.020 | 0 | 0.373 | 0.168 | 0.154 | 4852 |  | 969 | done | 0b23bd0* |
+| phase1-dogri-donor-mr-1791844615 | dogri | mr | donor-mr | 1.020 | 1 | 0.371 | 0.167 | 0.154 | 4852 |  | 969 | done | 0b23bd0* |
+| phase1-dogri-donor-mr-1791845011 | dogri | mr | donor-mr | 1.020 | 2 | 0.370 | 0.166 | 0.148 | 4852 |  | 969 | done | 0b23bd0* |
+| phase1-dogri-donor-ne-1791843210 | dogri | ne | donor-ne | 0.262 | 0 | 0.438 | 0.196 | 0.231 | 4852 |  | 969 | done | 0b23bd0* |
+| phase1-dogri-donor-ne-1791843572 | dogri | ne | donor-ne | 0.262 | 1 | 0.439 | 0.197 | 0.230 | 4852 |  | 969 | done | 0b23bd0* |
+| phase1-dogri-donor-ne-1791843942 | dogri | ne | donor-ne | 0.262 | 2 | 0.440 | 0.197 | 0.230 | 4852 |  | 969 | done | 0b23bd0* |
+| phase1-dogri-donor-ne-1791844321 | dogri | ne | donor-ne | 1.020 | 0 | 0.370 | 0.166 | 0.146 | 4852 |  | 969 | done | 0b23bd0* |
+| phase1-dogri-donor-ne-1791844710 | dogri | ne | donor-ne | 1.020 | 1 | 0.369 | 0.166 | 0.144 | 4852 |  | 969 | done | 0b23bd0* |
+| phase1-dogri-donor-ne-1791845106 | dogri | ne | donor-ne | 1.020 | 2 | 0.366 | 0.165 | 0.140 | 4852 |  | 969 | done | 0b23bd0* |
+| phase1-dogri-donor-pa-1791843031 | dogri | pa | donor-pa | 0.262 | 0 | 0.454 | 0.205 | 0.243 | 4852 |  | 969 | done | 0b23bd0* |
+| phase1-dogri-donor-pa-1791843388 | dogri | pa | donor-pa | 0.262 | 1 | 0.454 | 0.205 | 0.245 | 4852 |  | 969 | done | 0b23bd0* |
+| phase1-dogri-donor-pa-1791843751 | dogri | pa | donor-pa | 0.262 | 2 | 0.454 | 0.204 | 0.245 | 4852 |  | 969 | done | 0b23bd0* |
+| phase1-dogri-donor-pa-1791844131 | dogri | pa | donor-pa | 1.020 | 0 | 0.374 | 0.169 | 0.153 | 4852 |  | 969 | done | 0b23bd0* |
+| phase1-dogri-donor-pa-1791844518 | dogri | pa | donor-pa | 1.020 | 1 | 0.372 | 0.169 | 0.152 | 4852 |  | 969 | done | 0b23bd0* |
+| phase1-dogri-donor-pa-1791844911 | dogri | pa | donor-pa | 1.020 | 2 | 0.373 | 0.169 | 0.151 | 4852 |  | 969 | done | 0b23bd0* |
+| phase1-dogri-donor-pa+comp-1791845797 | dogri | pa | donor-pa+comp | 0.262 | 0 | 0.461 | 0.206 | 0.238 | 4852 |  | 969 | done | e47bd39* |
+| phase1-dogri-donor-pa+comp-1791846156 | dogri | pa | donor-pa+comp | 0.262 | 1 | 0.460 | 0.206 | 0.238 | 4852 |  | 969 | done | e47bd39* |
+| phase1-dogri-donor-pa+comp-1791846515 | dogri | pa | donor-pa+comp | 0.262 | 2 | 0.461 | 0.206 | 0.238 | 4852 |  | 969 | done | e47bd39* |
+| phase1-dogri-donor-pa+comp-1791846896 | dogri | pa | donor-pa+comp | 1.020 | 0 | 0.377 | 0.170 | 0.156 | 4852 |  | 969 | done | e47bd39* |
+| phase1-dogri-donor-pa+comp-1791847276 | dogri | pa | donor-pa+comp | 1.020 | 1 | 0.376 | 0.170 | 0.156 | 4852 |  | 969 | done | e47bd39* |
+| phase1-dogri-donor-pa+comp-1791847655 | dogri | pa | donor-pa+comp | 1.020 | 2 | 0.375 | 0.170 | 0.155 | 4852 |  | 969 | done | e47bd39* |
+| phase1-dogri-donor-pa+comp+noblank-1791848151 | dogri | pa | donor-pa+comp+noblank | 0.262 | 0 | 0.489 | 0.216 | 0.219 | 4852 |  | 969 | done | d76e001* |
+| phase1-dogri-donor-pa+comp+noblank-1791848527 | dogri | pa | donor-pa+comp+noblank | 0.262 | 1 | 0.491 | 0.216 | 0.218 | 4852 |  | 969 | done | d76e001* |
+| phase1-dogri-donor-pa+comp+noblank-1791848902 | dogri | pa | donor-pa+comp+noblank | 0.262 | 2 | 0.485 | 0.214 | 0.217 | 4852 |  | 969 | done | d76e001* |
+| phase1-dogri-donor-pa+mean-1791845707 | dogri | pa | donor-pa+mean | 0.262 | 0 | 0.462 | 0.208 | 0.257 | 4852 |  | 969 | done | e47bd39* |
+| phase1-dogri-donor-pa+mean-1791846066 | dogri | pa | donor-pa+mean | 0.262 | 1 | 0.463 | 0.209 | 0.258 | 4852 |  | 969 | done | e47bd39* |
+| phase1-dogri-donor-pa+mean-1791846425 | dogri | pa | donor-pa+mean | 0.262 | 2 | 0.462 | 0.208 | 0.260 | 4852 |  | 969 | done | e47bd39* |
+| phase1-dogri-donor-pa+mean-1791846800 | dogri | pa | donor-pa+mean | 1.020 | 0 | 0.376 | 0.170 | 0.161 | 4852 |  | 969 | done | e47bd39* |
+| phase1-dogri-donor-pa+mean-1791847180 | dogri | pa | donor-pa+mean | 1.020 | 1 | 0.374 | 0.170 | 0.160 | 4852 |  | 969 | done | e47bd39* |
+| phase1-dogri-donor-pa+mean-1791847560 | dogri | pa | donor-pa+mean | 1.020 | 2 | 0.376 | 0.170 | 0.159 | 4852 |  | 969 | done | e47bd39* |
+| phase1-dogri-donor-pa+noblank-1791848057 | dogri | pa | donor-pa+noblank | 0.262 | 0 | 0.485 | 0.214 | 0.218 | 4852 |  | 969 | done | d76e001* |
+| phase1-dogri-donor-pa+noblank-1791848433 | dogri | pa | donor-pa+noblank | 0.262 | 1 | 0.483 | 0.213 | 0.215 | 4852 |  | 969 | done | d76e001* |
+| phase1-dogri-donor-pa+noblank-1791848808 | dogri | pa | donor-pa+noblank | 0.262 | 2 | 0.484 | 0.213 | 0.216 | 4852 |  | 969 | done | d76e001* |
 | phase1-dogri-hindi-1791832790 | dogri | hi | hindi | 0.262 | 0 | 0.669 | 0.331 | 0.501 | 4852 |  | 969 | done | a57c406* |
 | phase1-dogri-hindi-1791833880 | dogri | hi | hindi | 0.262 | 0 | 0.669 | 0.331 | 0.501 | 4852 |  | 969 | done | 7f5ba89* |
 | phase1-dogri-hindi-1791840821 | dogri | hi | hindi | 0.262 | 0 | 0.431 | 0.193 | 0.241 | 4852 |  | 969 | done | 1f7a844* |
