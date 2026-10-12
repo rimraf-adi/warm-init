@@ -53,14 +53,15 @@ def _align(ref, hyp):
     return err, d[n][m]
 
 
-def tone_positions(ref, lang):
-    """Indices of tone-bearing ref characters."""
+def tone_positions(ref, lang, part="all"):
+    """Indices of tone-bearing ref characters. For Dogri, part is "all", "ha"
+    (ह and its virama) or "apos" (apostrophe marks; not in the IndicConformer vocab)."""
     pos = set()
     for i, ch in enumerate(ref):
         if lang == "dogri":
-            if ch in "'ʼ":
+            if ch in "'ʼ" and part in ("all", "apos"):
                 pos.add(i)
-            if ch == "ह":
+            if ch == "ह" and part in ("all", "ha"):
                 pos.add(i)
                 if i + 1 < len(ref) and ref[i + 1] == "्":
                     pos.add(i + 1)
@@ -77,11 +78,11 @@ def cer_stats(ref, hyp, positions=None):
     return edits, len(ref), sum(err[i] for i in positions), len(positions)
 
 
-def tone_cer(pairs, lang):
+def tone_cer(pairs, lang, part="all"):
     """Corpus tone-context CER and overall CER over (ref, hyp) pairs."""
     E = N = TE = TN = 0
     for ref, hyp in pairs:
-        e, n, te, tn = cer_stats(ref, hyp, tone_positions(ref, lang))
+        e, n, te, tn = cer_stats(ref, hyp, tone_positions(ref, lang, part))
         E += e; N += n; TE += te; TN += tn
     return {"cer": E / max(N, 1), "tone_cer": TE / max(TN, 1), "tone_chars": TN, "chars": N}
 
