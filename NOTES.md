@@ -85,3 +85,40 @@ Sample: first 150 transcribed rows per language (0.12-0.34 h each), from `tone_d
 - Kannada script: Tulu, Kannada. Gurmukhi: Punjabi. Meetei Mayek: Manipuri. Ol Chiki: Santali (79 transcribed rows found, 263 Devanagari characters mixed in). Odia: mostly Odia script with 1,458 Bengali-block characters. Bengali and Assamese both show the Bengali-Assamese block.
 - Dogri: 0 transcribed rows in VAANI (as in the plan; use IndicVoices). Bodo: config `Bodo` does not exist in VAANI (use IndicVoices).
 Caveat: counts come from a small head-of-file sample; tag counts per language are in the JSON. The Latin-script languages need a grapheme mapping before any cross-script donor copy (open item for Mizo/Manipuri donors).
+
+## Roadmap after the head-only runs (written 2026-10-13, before the results are in)
+
+The head-only runs give a baseline. The steps below are ordered by cost, and each has a rule for what counts as a result, fixed in advance. Backbone for everything from step 2 on is the multilingual `ai4bharat/IndicConformer`; the Hindi-only checkpoint is a baseline.
+
+### Step 0: analyse the head-only runs (no new training)
+- Per run, paired over test utterances: tone-character CER vs plain-character CER, with a bootstrap 95% CI (utterances resampled; seeds pooled after checking they agree).
+- Tone-character controls: ha-based tone characters vs a frequency-matched set of non-tone consonants, so a difference is not just rarity.
+- Confusion matrices for ह/virama and aspirate-vs-plain errors.
+- Decision rule (Gate 1, H2 on this backbone): supported only if (a) tone-character CER exceeds the matched control with the CI excluding zero, in the Hindi-init arm at 0.25 h and 1 h, and (b) that excess is smaller in the own-head arm. If not, H2 is recorded as not supported on this backbone; it does not stop the multilingual work.
+
+### Step 1: zero-shot donor-head map (cheap, no training, multilingual model)
+Decode each target's test audio with every one of the 22 language heads (`language_id` sweep), CTC and RNNT. Targets: Dogri, Punjabi, Bodo, Manipuri, Santali, Konkani, Maithili, Nepali. Report CER and tone-character CER per (target, head) and relate them to family, script and tonality of the head language. This is the inference-side family effect, and it also ranks candidate donors without any fine-tuning.
+
+### Step 2: head-only arms on the multilingual encoder (needs the extraction job)
+Arms for Dogri: random; own head (upper bound, no training); Hindi head; Punjabi head (tonal, other script, needs a Gurmukhi-to-Devanagari token mapping, with the fraction of Dogri tokens that find a match reported); a same-script non-tonal donor other than Hindi (Marathi or Nepali); the best head from Step 1. Budgets 0.25, 1 and 5 h, 3 seeds. Same protocol as the Hindi-encoder runs.
+
+### Step 3: encoder adapters with donor initialization (tests H1 and the family effect)
+- Bottleneck adapters in the top 6 of the 24 blocks. The output of the frozen lower blocks is cached once, so training is cheap. (To check first: whether the AI4Bharat NeMo fork's Conformer supports adapters; otherwise a small custom module.)
+- Donor adapters: train on 5 h of IndicVoices for Hindi and for Punjabi, each with its own frozen head. Then initialize the Dogri adapter from a donor adapter, from random, or from the average of the two; the Dogri head follows the Step 2 init.
+- Compare Hindi-init vs Punjabi-init vs random at 0.25, 1 and 5 h, 3 seeds, on tone-character CER first and WER second.
+
+### Step 4: mechanism (H1)
+Layer-wise linear tone probes. Labels: word contains ह् (from the transcript), using forced alignment to place the word in the frames. Compare probe accuracy by layer between the base encoder and encoders adapted from a tonal vs a non-tonal donor. Speaker- and word-disjoint splits.
+
+### Step 5: more targets (H3, H4)
+Punjabi as a simulated low-resource target (own head discarded), Bodo, Manipuri, Santali and non-tonal controls (Konkani, Maithili, Nepali), then the donor-tonality by target-tonality model from the plan. Dogri alone cannot separate tone from relatedness; the non-tonal controls and the within-language tone-bearing vs other-word contrast are what do.
+
+### Gates and stopping rules
+- Gate 2 (after Step 4): continue to the full grid only if a tonal donor keeps more tone information in upper layers or beats the non-tonal donor on tone-character CER at low data. If not, write up the negative result with the probes.
+- Every step logs to `results/runs.jsonl`; every step ends with a NOTES.md entry and a README status update in the same commit.
+
+### Known weaknesses to carry into every result
+- Dogri was seen by the multilingual model, so this is low-resource adaptation, not zero-shot. Unseen targets (Mizo, Kokborok, Tulu) are needed for the clean claim and need Latin or Kannada-script handling.
+- The test set is IndicVoices `valid` split by speaker, which is not audited against the model's training data.
+- Dogri's apostrophe tone mark cannot be tested with this vocabulary.
+- Tone is defined from spelling, not from acoustic measurement. A grammar or speaker check is still pending.
