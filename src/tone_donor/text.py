@@ -5,7 +5,6 @@ import unicodedata
 # VAANI annotation tags: <pause>, <static>...</static>, [inhaling], {word} -> word
 _TAG = re.compile(r"</?[a-z_]+>|\[[^\]]*\]")
 _BRACE = re.compile(r"\{([^}]*)\}")
-_PUNCT = re.compile(r"[^\w\sʼ'़਼्੍]", re.UNICODE)
 
 # Characters whose presence in the reference marks a tone-bearing context.
 # Dogri (checked on IndicVoices): ha+virama and the ASCII apostrophe.
@@ -24,7 +23,9 @@ def normalize(text, keep_tags=False):
         t = _BRACE.sub(r"\1", t)
         t = _TAG.sub(" ", t)
     t = t.replace("’", "'")
-    t = _PUNCT.sub(" ", t)       # keeps U+02BC, ASCII apostrophe, virama, nukta
+    # drop punctuation/symbols only; keep letters, combining marks, digits, and the
+    # apostrophe-like tone marks (Dogri uses them). \w would delete Indic vowel signs.
+    t = "".join(c if (c in "'ʼ" or unicodedata.category(c)[0] not in "PS") else " " for c in t)
     return re.sub(r"\s+", " ", t).strip()
 
 
