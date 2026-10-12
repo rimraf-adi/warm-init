@@ -20,7 +20,8 @@ from tone_donor.text import ASPIRATES_DEVANAGARI, PLAIN_DEVANAGARI, charset_cer,
 from tone_donor.vaani_stream import _load_dotenv
 
 
-def main(code, iv_lang, n):
+def main(code, iv_lang, n, lang_id=None):
+    lang_id = lang_id or code
     _load_dotenv()
     tok = os.environ["HF_TOKEN"]
     import nemo.collections.asr as nemo_asr
@@ -52,7 +53,7 @@ def main(code, iv_lang, n):
     for dec in ("ctc", "rnnt"):
         model.cur_decoder = dec
         kw = {"logprobs": False} if dec == "ctc" else {}
-        hyp = model.transcribe(files, batch_size=8, language_id=code, **kw)
+        hyp = model.transcribe(files, batch_size=8, language_id=lang_id, **kw)
         if isinstance(hyp, tuple):
             hyp = hyp[0]
         hyp = [h.text if hasattr(h, "text") else h for h in hyp]
@@ -65,7 +66,7 @@ def main(code, iv_lang, n):
         out[dec] = (m, hyp[:2])
         print(dec, m, flush=True)
         print("  ref:", refs[0], "\n  hyp:", hyp[0], flush=True)
-        log_run(stage="phase0-smoke", target=iv_lang, donor=code, init="zero-shot-" + code, budget_h=None,
+        log_run(stage="phase0-smoke", target=iv_lang, donor=code, init=("zero-shot-" if lang_id != "doi" else "own-head-") + lang_id, budget_h=None,
                 backbone=f"indicconformer_{code}", split="IndicVoices-valid-first-n", n_utts=len(files),
                 cer=m["cer"], aspirate_cer=m["aspirate_cer"], plain_cer=m["plain_cer"], tone_cer=m["tone_cer"], tone_chars=m["tone_chars"],
                 config={"decoder": dec, "n": n, "audio_h": round(secs / 3600, 3)},
@@ -73,4 +74,4 @@ def main(code, iv_lang, n):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1], sys.argv[2], int(sys.argv[3]))
+    main(sys.argv[1], sys.argv[2], int(sys.argv[3]), sys.argv[4] if len(sys.argv) > 4 else None)
