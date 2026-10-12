@@ -1,7 +1,7 @@
 # Results
 
 Generated from `results/runs.jsonl`; do not edit by hand.
-Runs logged: 4
+Runs logged: 8
 
 ## Stage: phase0-smoke
 
@@ -9,6 +9,10 @@ Runs logged: 4
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | phase0-smoke-dogri-own-head-1791830106 | dogri | hi | own-head |  |  |  | 0.406 | 0.822 | 326 |  | 40 | done | 6fdbff6* |
 | phase0-smoke-dogri-own-head-1791830117 | dogri | hi | own-head |  |  |  | 0.420 | 0.807 | 326 |  | 40 | done | 6fdbff6* |
+| phase0-smoke-dogri-own-head-doi-1791830540 | dogri | hi | own-head-doi |  |  |  | 1.000 | 1.000 | 1282 |  | 200 | done | c220276* |
+| phase0-smoke-dogri-own-head-doi-1791831436 | dogri | hi | own-head-doi |  |  |  | 41.463 | 0.132 | 1282 |  | 200 | done | c220276* |
+| phase0-smoke-dogri-own-head-doi-INVALID-1791831460 | dogri | hi | own-head-doi-INVALID |  |  |  |  |  |  |  | 200 | invalid | c220276* |
+| phase0-smoke-dogri-own-head-doi-INVALID-1791831460 | dogri | hi | own-head-doi-INVALID |  |  |  |  |  |  |  | 200 | invalid | c220276* |
 | phase0-smoke-dogri-zero-shot-hi-1791830235 | dogri | hi | zero-shot-hi |  |  |  | 0.413 | 0.794 | 1282 |  | 200 | done | 9bb9189* |
 | phase0-smoke-dogri-zero-shot-hi-1791830287 | dogri | hi | zero-shot-hi |  |  |  | 0.422 | 0.789 | 1282 |  | 200 | done | 9bb9189* |
 

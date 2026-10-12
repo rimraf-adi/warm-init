@@ -882,5 +882,106 @@
     12
    ]
   ]
+ },
+ "Dogri": {
+  "rows": 0,
+  "hours": 0.0,
+  "scripts": [],
+  "top_tags": []
+ },
+ "Bodo": {
+  "error": "ValueError: BuilderConfig 'Bodo' not found. Available: ['Mara', 'Agariya', 'Angami', 'Angika', 'Ao', 'Assamese', 'Awadhi', 'Baghati', 'Bagheli', 'Bagri', 'Bajjika"
+ },
+ "Manipuri": {
+  "rows": 150,
+  "hours": 0.271,
+  "scripts": [
+   [
+    "MEETEI",
+    4613
+   ]
+  ],
+  "top_tags": [
+   [
+    "<pause>",
+    71
+   ],
+   [
+    "<static>",
+    45
+   ],
+   [
+    "</static>",
+    45
+   ],
+   [
+    "<noise>",
+    42
+   ],
+   [
+    "</noise>",
+    42
+   ],
+   [
+    "[inhaling]",
+    36
+   ],
+   [
+    "[unintelligible]",
+    23
+   ],
+   [
+    "<talking>",
+    11
+   ]
+  ]
+ },
+ "Santali": {
+  "rows": 79,
+  "hours": 0.115,
+  "scripts": [
+   [
+    "OL",
+    3513
+   ],
+   [
+    "DEVANAGARI",
+    263
+   ]
+  ],
+  "top_tags": [
+   [
+    "[unintelligible]",
+    14
+   ],
+   [
+    "<pause>",
+    8
+   ],
+   [
+    "[breathing]",
+    6
+   ],
+   [
+    "<noise>",
+    6
+   ],
+   [
+    "</noise>",
+    6
+   ],
+   [
+    "{side}",
+    4
+   ],
+   [
+    "{mall}",
+    3
+   ],
+   [
+    "{tempo}",
+    3
+   ]
+  ]
  }
 }
