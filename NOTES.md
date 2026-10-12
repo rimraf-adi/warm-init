@@ -65,3 +65,6 @@ Decision: tone-context CER for Dogri is measured on ह, the following virama, a
 
 ### 2026-10-13: Dogri head inside the hi checkpoint is untrained
 `language_id="doi"` on the `hi` checkpoint gave empty CTC output and a looping RNNT output (CER 41.5), so the multilingual tokenizer exists but only the Hindi head is trained in that file. The two runs are logged as invalid in `results/runs.jsonl` (kept, with `status=invalid`). The Dogri upper bound still needs the gated `doi` checkpoint (terms must be accepted by the account owner). The zero-shot Hindi baseline from earlier stands.
+
+### 2026-10-13: backbone correction (not the 600M model)
+The plan names IndicConformer-600M-Multi. That checkpoint (`ai4bharat/indic-conformer-600m-multilingual`) is ONNX plus custom code, inference only, so it is not trainable here and is not what any run in `results/runs.jsonl` uses. All Phase 1 runs use the per-language checkpoint `indicconformer_stt_hi_hybrid_ctc_rnnt_large`: Conformer-large encoder, 17 blocks, d_model 512, 115.1M encoder parameters measured (model card says about 120M). Total model size with decoder and joint network was not measured. Results apply to this Hindi-trained encoder only and must not be described as results on the 600M multilingual model. Open question: whether its encoder saw other languages (not verified).
