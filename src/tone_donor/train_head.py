@@ -1,167 +1,199 @@
 """Phase 1 kill test: train only Dogri's CTC output columns on cached frozen-encoder features.
 
-Arms (--init):
+Arms (init):
   random : the Dogri columns (and blank) of the shared 1x1 conv head are re-initialised (xavier).
-  hindi  : Dogri columns are copied from the Hindi columns for tokens whose string is in both
-           tokenizers; unmatched Dogri tokens and nothing else are re-initialised. Blank copied.
-Encoder, preprocessor and every other parameter are frozen. Loss: CTC over the Dogri token slice.
+  hindi  : Dogri columns copied from the Hindi columns for tokens whose string is in both
+           tokenizers; unmatched Dogri tokens re-initialised. Blank copied.
+Encoder and every other parameter are frozen. Loss: CTC over the Dogri token slice.
+Protocol (fixed): AdamW lr 1e-3, batch 16, 40 epochs, model selection by best dev[:300] CER.
+One process runs all configs so the model loads once; configs already logged are skipped.
 
-    python -m tone_donor.train_head hindi 1.0 0 /home/vnit/data/dogri
+    python -m tone_donor.train_head /home/vnit/data/dogri random:0.25:0 hindi:0.25:0 ...
 """
 import json
-import math
 import os
 import random
 import sys
 
+import editdistance
 import torch
 
-from tone_donor.runlog import log_run
-from tone_donor.text import ASPIRATES_DEVANAGARI, PLAIN_DEVANAGARI, charset_cer, cer_stats, tone_cer
 from tone_donor.prep_features import load_encoder
+from tone_donor.runlog import log_run, read_runs
+from tone_donor.text import ASPIRATES_DEVANAGARI, PLAIN_DEVANAGARI, charset_cer, normalize, tone_cer
 from tone_donor.vaani_stream import _load_dotenv
 
 LANG = "doi"
+EPOCHS, LR, BS = 40, 1e-3, 16
 
 
 def lang_columns(model, lang):
-    mask = model.ctc_decoder.language_masks[lang]
-    return torch.tensor([i for i, b in enumerate(mask) if b])      # global columns incl. blank (last)
+    return torch.tensor([i for i, b in enumerate(model.ctc_decoder.language_masks[lang]) if b])
 
 
-def token_strings(tk, lang):
-    return list(tk.tokenizers_dict[lang].vocab)      # 256 sentencepiece pieces, local ids
+def pieces(model, lang):
+    return list(model.tokenizer.tokenizers_dict[lang].vocab)
 
 
 def build_head(model, init, seed):
     torch.manual_seed(seed)
     conv = model.ctc_decoder.decoder_layers[0]
-    tk = model.tokenizer
-    cols_d = lang_columns(model, LANG)
-    cols_h = lang_columns(model, "hi")
-    sp_d, sp_h = token_strings(tk, LANG), token_strings(tk, "hi")
-    W, b = conv.weight.data.clone(), conv.bias.data.clone()
+    cols_d, cols_h = lang_columns(model, LANG), lang_columns(model, "hi")
+    sp_d, sp_h = pieces(model, LANG), pieces(model, "hi")
+    W, b = conv.weight.data.clone().cpu(), conv.bias.data.clone().cpu()
     newW = torch.empty(len(cols_d), W.shape[1])
-    newb = torch.zeros(len(cols_d))
     torch.nn.init.xavier_uniform_(newW.unsqueeze(-1))
+    newb = torch.zeros(len(cols_d))
     copied = 0
     if init == "hindi":
         h_index = {s: i for i, s in enumerate(sp_h)}
         for j, s in enumerate(sp_d):
             if s in h_index:
                 src = cols_h[h_index[s]]
-                newW[j] = W[src, :, 0]; newb[j] = b[src]; copied += 1
-        newW[-1] = W[cols_h[-1], :, 0]; newb[-1] = b[cols_h[-1]]       # blank
+                newW[j] = W[src, :, 0]
+                newb[j] = b[src]
+                copied += 1
+        newW[-1] = W[cols_h[-1], :, 0]
+        newb[-1] = b[cols_h[-1]]
     head = torch.nn.Linear(W.shape[1], len(cols_d))
-    head.weight.data = newW; head.bias.data = newb
+    head.weight.data, head.bias.data = newW, newb
     return head.cuda(), copied, len(sp_d)
 
 
-def batches(data, bs, shuffle):
-    idx = list(range(len(data)))
-    if shuffle:
-        random.shuffle(idx)
-    for i in range(0, len(idx), bs):
-        yield [data[j] for j in idx[i:i + bs]]
+def to_gpu(items, model):
+    """Features to GPU once, targets pre-tokenised."""
+    for it in items:
+        it["f"] = it["feat"].cuda()
+        it["ids"] = torch.tensor(model.tokenizer.text_to_ids(it["text"], LANG))
+    return items
 
 
-def collate(model, items):
-    feats = torch.nn.utils.rnn.pad_sequence([it["feat"].float() for it in items], batch_first=True).cuda()
-    flen = torch.tensor([len(it["feat"]) for it in items]).cuda()
-    ids = [torch.tensor(model.tokenizer.text_to_ids(it["text"], LANG)) for it in items]
-    tgt = torch.cat(ids).cuda(); tlen = torch.tensor([len(i) for i in ids]).cuda()
-    return feats, flen, tgt, tlen
+def pad(items):
+    x = torch.nn.utils.rnn.pad_sequence([it["f"] for it in items], batch_first=True).float()
+    return x, torch.tensor([len(it["f"]) for it in items], device=x.device)
 
 
 @torch.no_grad()
-def decode(model, head, items):
-    out = []
-    for chunk in batches(items, 32, False):
-        feats = torch.nn.utils.rnn.pad_sequence([it["feat"].float() for it in chunk], batch_first=True).cuda()
-        lp = head(feats).argmax(-1).cpu()
-        blank = head.out_features - 1
-        for k, it in enumerate(chunk):
-            seq, prev = [], -1
-            for t in lp[k, :len(it["feat"])].tolist():
-                if t != prev and t != blank:
-                    seq.append(t)
-                prev = t
-            out.append(model.tokenizer.ids_to_text(seq, LANG).strip())
+def decode(model, head, items, bs=64):
+    out, blank = [], head.out_features - 1
+    for i in range(0, len(items), bs):
+        chunk = items[i:i + bs]
+        x, lens = pad(chunk)
+        am = head(x).argmax(-1).cpu()
+        for k in range(len(chunk)):
+            s = am[k, :lens[k].item()]
+            keep = torch.ones_like(s, dtype=torch.bool)
+            keep[1:] = s[1:] != s[:-1]
+            s = s[keep & (s != blank)]
+            out.append(model.tokenizer.ids_to_text(s.tolist(), LANG).strip())
     return out
 
 
 def evaluate(model, head, items):
-    from tone_donor.text import normalize
     hyps = [normalize(h, drop_apos=True) for h in decode(model, head, items)]
-    refs = [it["text"] for it in items]
-    pairs = list(zip(refs, hyps))
-    ha = tone_cer(pairs, "dogri", "ha"); allc = tone_cer(pairs, "dogri", "all")
-    asp, n_asp = charset_cer(pairs, ASPIRATES_DEVANAGARI); pln, n_pln = charset_cer(pairs, PLAIN_DEVANAGARI)
-    wer_e = wer_n = 0
-    import editdistance
+    pairs = list(zip([it["text"] for it in items], hyps))
+    ha, allc = tone_cer(pairs, "dogri", "ha"), tone_cer(pairs, "dogri", "all")
+    asp, n_asp = charset_cer(pairs, ASPIRATES_DEVANAGARI)
+    pln, n_pln = charset_cer(pairs, PLAIN_DEVANAGARI)
+    we = wn = 0
     for r, h in pairs:
-        rw, hw = r.split(), h.split()
-        wer_e += editdistance.eval(rw, hw); wer_n += len(rw)
-    return {"cer": allc["cer"], "wer": wer_e / max(wer_n, 1), "ha_tone_cer": ha["tone_cer"], "n_ha": ha["tone_chars"],
+        we += editdistance.eval(r.split(), h.split())
+        wn += len(r.split())
+    return {"cer": allc["cer"], "wer": we / max(wn, 1), "ha_tone_cer": ha["tone_cer"], "n_ha": ha["tone_chars"],
             "aspirate_cer": asp, "n_asp": n_asp, "plain_cer": pln, "n_plain": n_pln}, pairs
 
 
-def main(init, hours, seed, data_dir, epochs=40, lr=1e-3, bs=16):
-    _load_dotenv()
+def train_one(model, data, init, hours, seed):
+    train, dev, test = data
     random.seed(seed)
-    tok = os.environ["HF_TOKEN"]
-    model = load_encoder(tok)
-    for p in model.parameters():
-        p.requires_grad = False
-    train = torch.load(os.path.join(data_dir, "train.pt")); dev = torch.load(os.path.join(data_dir, "dev.pt"))
-    test = torch.load(os.path.join(data_dir, "test.pt"))
-    # budget: whole speakers in file order, nested
     sel, tot, last = [], 0.0, None
     for it in train:
         if tot >= hours * 3600 and it["speaker"] != last:
             break
-        sel.append(it); tot += it["dur"]; last = it["speaker"]
+        sel.append(it)
+        tot += it["dur"]
+        last = it["speaker"]
     head, copied, nd = build_head(model, init, seed)
     print(f"init={init} hours={tot/3600:.3f} utts={len(sel)} copied {copied}/{nd} tokens", flush=True)
-    opt = torch.optim.AdamW(head.parameters(), lr=lr, weight_decay=0.0)
+    opt = torch.optim.AdamW(head.parameters(), lr=LR, weight_decay=0.0)
     ctc = torch.nn.CTCLoss(blank=head.out_features - 1, zero_infinity=True)
     best, best_state, hist = 1e9, None, []
-    for ep in range(epochs):
-        head.train(); tl = 0; nb = 0
-        for items in batches(sel, bs, True):
-            feats, flen, tgt, tlen = collate(model, items)
-            lp = torch.log_softmax(head(feats), -1).transpose(0, 1)
-            loss = ctc(lp, tgt, flen, tlen)
-            opt.zero_grad(); loss.backward(); opt.step(); tl += loss.item(); nb += 1
+    for ep in range(EPOCHS):
+        head.train()
+        tl = nb = 0
+        idx = list(range(len(sel)))
+        random.shuffle(idx)
+        for i in range(0, len(idx), BS):
+            items = [sel[j] for j in idx[i:i + BS]]
+            x, flen = pad(items)
+            tgt = torch.cat([it["ids"] for it in items]).cuda()
+            tlen = torch.tensor([len(it["ids"]) for it in items]).cuda()
+            loss = ctc(torch.log_softmax(head(x), -1).transpose(0, 1), tgt, flen, tlen)
+            opt.zero_grad()
+            loss.backward()
+            opt.step()
+            tl += loss.item()
+            nb += 1
         head.eval()
         m, _ = evaluate(model, head, dev[:300])
         hist.append({"epoch": ep, "train_loss": tl / nb, "dev_cer": m["cer"]})
-        print(ep, round(tl / nb, 3), "dev300 CER", round(m["cer"], 4), flush=True)
         if m["cer"] < best:
-            best = m["cer"]; best_state = {k: v.clone() for k, v in head.state_dict().items()}
+            best = m["cer"]
+            best_state = {k: v.clone() for k, v in head.state_dict().items()}
+    print(f"  last epoch loss {hist[-1]['train_loss']:.3f} best dev300 CER {best:.4f}", flush=True)
     head.load_state_dict(best_state)
+    head.eval()
     res = {}
     for name, items in (("dev", dev), ("test", test)):
         res[name], pairs = evaluate(model, head, items)
-        if name == "test":
-            os.makedirs("results/phase1", exist_ok=True)
-            rid = f"phase1-dogri-{init}-{hours}h-s{seed}"
-            with open(f"results/phase1/{rid}.jsonl", "w", encoding="utf-8") as f:
-                for r, h in pairs:
-                    f.write(json.dumps({"ref": r, "hyp": h}, ensure_ascii=False) + "\n")
+    rid = f"phase1-dogri-{init}-{hours}h-s{seed}"
+    os.makedirs("results/phase1", exist_ok=True)
+    with open(f"results/phase1/{rid}.jsonl", "w", encoding="utf-8") as f:
+        for r, h in pairs:
+            f.write(json.dumps({"ref": r, "hyp": h}, ensure_ascii=False) + "\n")
     t = res["test"]
     log_run(stage="phase1", hypothesis="H2", target="dogri", donor="hi" if init == "hindi" else None,
             init=init, budget_h=round(tot / 3600, 3), seed=seed, backbone="indicconformer_hi_frozen_encoder",
             split="speaker-disjoint test (IndicVoices valid, alternating speakers)", n_utts=len(test),
             wer=t["wer"], cer=t["cer"], tone_cer=t["ha_tone_cer"], tone_chars=t["n_ha"],
             aspirate_cer=t["aspirate_cer"], plain_cer=t["plain_cer"],
-            config={"epochs": epochs, "lr": lr, "bs": bs, "trained": "ctc head columns only", "tokens_copied": copied,
-                    "dev": res["dev"], "history_last": hist[-3:], "apostrophe": "dropped from text",
-                    "tone_chars": "ha + virama only", "model_selection": "best dev-300 CER"},
+            config={"epochs": EPOCHS, "lr": LR, "bs": BS, "trained": "ctc head columns only", "tokens_copied": copied,
+                    "requested_hours": hours, "dev": res["dev"], "history_last": hist[-3:],
+                    "apostrophe": "dropped from text", "tone_chars": "ha + virama only",
+                    "model_selection": "best dev-300 CER", "impl": "gpu-cached v2 (same protocol as v1)"},
             artifacts={"predictions": f"results/phase1/{rid}.jsonl"},
             notes="kill test arm; encoder frozen; head-only training")
     print("TEST", json.dumps(t), flush=True)
 
 
+def already_done(init, hours, seed):
+    for r in read_runs():
+        if r["stage"] != "phase1" or r["status"] != "done" or r["init"] != init or r["seed"] != seed:
+            continue
+        req = r["config"].get("requested_hours")
+        if req is not None and abs(req - hours) < 1e-6:
+            return True
+        if req is None and abs((r["budget_h"] or 0) - hours) < 0.1 * max(hours, 1) + 0.03:   # v1 logs realised hours
+            return True
+    return False
+
+
+def main(data_dir, specs):
+    _load_dotenv()
+    model = load_encoder(os.environ["HF_TOKEN"])
+    for p in model.parameters():
+        p.requires_grad = False
+    train = to_gpu(torch.load(os.path.join(data_dir, "train.pt")), model)
+    dev = to_gpu(torch.load(os.path.join(data_dir, "dev.pt")), model)
+    test = to_gpu(torch.load(os.path.join(data_dir, "test.pt")), model)
+    for spec in specs:
+        init, h, s = spec.split(":")
+        h, s = float(h), int(s)
+        if already_done(init, h, s):
+            print("skip", spec, flush=True)
+            continue
+        train_one(model, (train, dev, test), init, h, s)
+
+
 if __name__ == "__main__":
-    main(sys.argv[1], float(sys.argv[2]), int(sys.argv[3]), sys.argv[4])
+    main(sys.argv[1], sys.argv[2:])
