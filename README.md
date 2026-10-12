@@ -45,7 +45,10 @@ src/tone_donor/
   runlog.py         append-only run log (log_run, read_runs)
   report.py         rebuilds results/RESULTS.md from the run log
   prep_features.py  speaker-disjoint Dogri splits + cached frozen-encoder features (BACKBONE=hi|multi)
-  train_head.py     Phase 1 kill test: train Dogri CTC head columns on cached features
+  train_head.py     Phase 1: train Dogri CTC head columns on cached features (arms: random, own, hindi, donor-<code>)
+  translit.py       Indic script -> Devanagari by Unicode offset (for donor token matching)
+  make_splits.py    materialise IndicVoices split manifests + audio
+  analyze_phase1.py step 0 analysis: tone vs control characters, paired bootstrap
   nemo_check.py     smoke test: pretrained checkpoint on IndicVoices utterances
 scripts/            WSL setup/run helpers, grid driver, model inspection scripts
 tests/test_text.py  tests for normalization and tone CER
@@ -80,6 +83,13 @@ wsl -d Ubuntu-22.04 -- bash /mnt/d/warm-init/scripts/wsl_run_ai4b.sh python -m t
 
 # Phase 1 grid (WSL), skips configs already in results/runs.jsonl
 wsl -d Ubuntu-22.04 -- bash /mnt/d/warm-init/scripts/run_phase1.sh
+
+# head-only grids on the multilingual encoder (BACKBONE=multi is set inside these scripts)
+wsl -d Ubuntu-22.04 -- bash /mnt/d/warm-init/scripts/run_phase1_multi.sh          # own / random / hindi arms
+wsl -d Ubuntu-22.04 -- bash /mnt/d/warm-init/scripts/run_phase1_multi_donors.sh   # Punjabi, Marathi, Nepali, Bengali donor heads
+
+# step 0 analysis (bootstrap, tone vs control characters); argument = backbone label as logged
+uv run python -m tone_donor.analyze_phase1 indicconformer_multi_frozen_encoder
 
 # regenerate result tables
 uv run python -m tone_donor.report
