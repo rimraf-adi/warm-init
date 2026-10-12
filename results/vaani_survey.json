@@ -482,5 +482,137 @@
     8
    ]
   ]
+ },
+ "Bhojpuri": {
+  "rows": 150,
+  "hours": 0.333,
+  "scripts": [
+   [
+    "DEVANAGARI",
+    6477
+   ]
+  ],
+  "top_tags": [
+   [
+    "<noise>",
+    42
+   ],
+   [
+    "</noise>",
+    42
+   ],
+   [
+    "{color}",
+    40
+   ],
+   [
+    "<static_noise>",
+    32
+   ],
+   [
+    "</static_noise>",
+    32
+   ],
+   [
+    "[inhaling]",
+    31
+   ],
+   [
+    "{park}",
+    12
+   ],
+   [
+    "{photo}",
+    12
+   ]
+  ]
+ },
+ "Marwari": {
+  "rows": 150,
+  "hours": 0.305,
+  "scripts": [
+   [
+    "DEVANAGARI",
+    6730
+   ]
+  ],
+  "top_tags": [
+   [
+    "<noise>",
+    77
+   ],
+   [
+    "</noise>",
+    77
+   ],
+   [
+    "[breathing]",
+    46
+   ],
+   [
+    "{color}",
+    28
+   ],
+   [
+    "<pause>",
+    14
+   ],
+   [
+    "[unintelligible]",
+    14
+   ],
+   [
+    "{side}",
+    13
+   ],
+   [
+    "{photo}",
+    12
+   ]
+  ]
+ },
+ "Magahi": {
+  "rows": 150,
+  "hours": 0.283,
+  "scripts": [
+   [
+    "DEVANAGARI",
+    5691
+   ]
+  ],
+  "top_tags": [
+   [
+    "<pause>",
+    69
+   ],
+   [
+    "<noise>",
+    34
+   ],
+   [
+    "</noise>",
+    34
+   ],
+   [
+    "[unintelligible]",
+    33
+   ],
+   [
+    "[inhaling]",
+    12
+   ],
+   [
+    "{photo}",
+    9
+   ],
+   [
+    "[breathing]",
+    7
+   ],
+   [
+    "{color}",
+    7
+   ]
+  ]
  }
 }
