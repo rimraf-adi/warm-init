@@ -1,0 +1,5 @@
+- [Git identity and commits](feedback_git-identity-and-commits.md) — push as rimraf-adi, short human commits, no Claude trailer
+- [Tone-donor project status](project_tone-donor-status.md) — setup facts, Dogri tone-mark finding, plan state
+- [Caveman skill](feedback_caveman-skill.md) — terse replies on; installed SKILL.md only, plain prose for persisted files
+- [Design direction](project_design-direction.md) — multilingual backbone, monolingual donors, language-family focus
+- [Docs in git](feedback_docs-in-git.md) — update README/NOTES/results every milestone, keep git clean and pushed

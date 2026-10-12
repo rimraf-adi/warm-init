@@ -12,6 +12,7 @@ Owner: rimraf-adi. Repository: https://github.com/rimraf-adi/warm-init
 | [novelty-check.md](novelty-check.md) | Literature and novelty check of the plan, with a search log and a reference check. |
 | [NOTES.md](NOTES.md) | Lab notebook: status board, environment facts, dated findings, decisions, open items. Newest at the bottom. |
 | [results/README.md](results/README.md) | Layout and rules for results. |
+| [docs/agent-memory/](docs/agent-memory/README.md) | Mirror of the assistant's memory notes (preferences, design direction, project facts). |
 | [results/RESULTS.md](results/RESULTS.md) | Tables generated from the run log. Never edited by hand. |
 | `results/runs.jsonl` | Append-only run log. One line per run, with git commit, config hash and library versions. |
 
