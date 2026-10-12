@@ -157,3 +157,26 @@ Reading (mine):
 2. Hindi-init helps at 0.25 h, mostly on tone characters too, which is the opposite of what H2 predicts for a non-tonal donor. The advantage disappears by 1 h and flips to a small disadvantage on tone characters at 5 h (tone CER 0.339 vs 0.322 on seed means, per-seed values 0.326/0.351/0.339 vs 0.331/0.318/0.318). The seed spread is about as large as the difference (a seed-level t-test gives roughly p of 0.1), so the 5 h reversal is not established.
 3. Rule (b) of Gate 1 (the excess being smaller with the model's own Dogri head) cannot be tested on this backbone because the Hindi-only encoder has no Dogri head. Gate 1 is therefore undecided here, and the multilingual backbone is where it is decided.
 Caveats: single frozen-encoder linear head only; one test set with a different gender and task mix from train; Dogri was seen in IndicConformer's training; seeds are 3.
+
+### 2026-10-13: Step 0 analysis on the multilingual backbone (`analysis_indicconformer_multi_frozen_encoder.json`; Gate 1)
+Setup as for the Hindi-only encoder but the frozen encoder is `ai4bharat/IndicConformer` (628M). Arms: `own` (the model's trained Dogri head, no training, one run), `random` and `hindi` (Hindi head columns copied for the 168 of 256 Dogri tokens whose string also exists in Hindi's tokenizer, blank copied), 3 seeds. Same test set, tone characters, control characters and bootstrap as before.
+
+| budget h | arm | CER | tone CER | control CER | tone-control [95% CI] | tone/CER | aspirate | plain |
+|---|---|---|---|---|---|---|---|---|
+| 0.25 | hindi | 0.193 | 0.243 | 0.119 | +0.124 [+0.105, +0.142] | 1.26 | 0.218 | 0.130 |
+| 0.25 | random | 0.185 | 0.175 | 0.117 | +0.059 [+0.041, +0.076] | 0.95 | 0.272 | 0.109 |
+| 1.0 | hindi | 0.166 | 0.155 | 0.102 | +0.053 [+0.036, +0.068] | 0.93 | 0.176 | 0.094 |
+| 1.0 | random | 0.162 | 0.135 | 0.095 | +0.039 [+0.024, +0.054] | 0.83 | 0.178 | 0.084 |
+| 5.0 | hindi | 0.157 | 0.137 | 0.096 | +0.041 [+0.025, +0.057] | 0.87 | 0.139 | 0.089 |
+| 5.0 | random | 0.153 | 0.129 | 0.096 | +0.032 [+0.018, +0.047] | 0.84 | 0.138 | 0.084 |
+| own head | own | 0.145 | 0.113 | 0.075 | +0.038 [+0.025, +0.052] | 0.78 | 0.117 | 0.075 |
+
+Hindi minus random (paired bootstrap): CER +0.008 [+0.005, +0.011] / +0.004 / +0.004 at 0.25 / 1 / 5 h; tone CER +0.067 [+0.055, +0.080] / +0.020 [+0.013, +0.028] / +0.009 [+0.002, +0.014]; tone-minus-control +0.065 [+0.052, +0.079] / +0.013 [+0.005, +0.022] / +0.008 [+0.002, +0.015]. Per-seed tone CER at 0.25 h: Hindi 0.241 / 0.242 / 0.245, random 0.181 / 0.175 / 0.170, so the 0.25 h gap is far larger than seed spread; at 5 h the per-seed ranges are 0.133-0.140 (Hindi) and 0.127-0.132 (random).
+
+Gate 1 (rules fixed in the roadmap): (a) tone-character CER exceeds the matched control with the CI excluding zero in the Hindi arm at 0.25 h and 1 h: met. (b) the excess is smaller with the model's own Dogri head: met against Hindi-init at 0.25 h (+0.038 vs +0.124); at 5 h the excess is about equal (+0.038 vs +0.041). Decision: Gate 1 passes on the multilingual backbone; continue.
+
+Reading (mine) and limits:
+- Copying the Hindi (non-tonal, same-script) head into Dogri's slice leaves more errors on ह/virama than a random head does, mostly at 0.25 h. With a random head, tone characters are no longer an error hotspot (tone/CER below 1).
+- This does not yet show the cause is tone. A mismatched donor head could hurt ह for other reasons. Needed: other non-tonal donors (Marathi, Nepali, Bengali) and the tonal donor (Punjabi, cross-script), compared on the same metric. The control set (गपम) is easier per character than ह, so the +0.03 to +0.06 floor in the random and own arms is expected and the contrast between arms is what matters.
+- On the Hindi-only encoder the picture differed (Hindi-init helped at 0.25 h). The result depends on the backbone and must be reported per backbone.
+- Own head: one run, no seeds. Dogri was seen by this model. Test set composition differs from train (see data audit entry).
