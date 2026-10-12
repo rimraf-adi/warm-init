@@ -68,3 +68,11 @@ Decision: tone-context CER for Dogri is measured on ह, the following virama, a
 
 ### 2026-10-13: backbone correction (not the 600M model)
 The plan names IndicConformer-600M-Multi. That checkpoint (`ai4bharat/indic-conformer-600m-multilingual`) is ONNX plus custom code, inference only, so it is not trainable here and is not what any run in `results/runs.jsonl` uses. All Phase 1 runs use the per-language checkpoint `indicconformer_stt_hi_hybrid_ctc_rnnt_large`: Conformer-large encoder, 17 blocks, d_model 512, 115.1M encoder parameters measured (model card says about 120M). Total model size with decoder and joint network was not measured. Results apply to this Hindi-trained encoder only and must not be described as results on the 600M multilingual model. Open question: whether its encoder saw other languages (not verified).
+
+### 2026-10-13: the multilingual NeMo model exists and works (use this as the backbone)
+- `ai4bharat/IndicConformer` (file `IndicConformer.nemo`, 2.5 GB, readable with the project token) restores with the AI4Bharat NeMo fork as EncDecHybridRNNTCTCBPEModel: 628.4M parameters, ConformerEncoder with 24 blocks (607.7M), MultilingualTokenizer with 5632 tokens for the 22 languages. This is the 600M multilingual model of the plan, in trainable form. Set `BACKBONE=multi` to use it in `prep_features` and `train_head`; default `hi` is the 115M Hindi-only checkpoint.
+- First 100 IndicVoices Dogri validation utterances (not audited against its training data; Dogri was seen in its training), CER / ha-tone CER:
+  - own Dogri head: CTC 0.144 / 0.078, RNNT 0.144 / 0.083.
+  - Hindi head on Dogri audio: CTC 0.343 / 0.702, RNNT 0.450 / 0.742.
+  Reading (mine): with the own head, ha-tone errors are below overall error; with the Hindi head they are about twice overall error. This is the zero-shot version of the H2 pattern, in the multilingual model.
+- All 22 monolingual `indicconformer_stt_<code>` checkpoints became readable after the account owner accepted their terms. Their heads live in a different feature space (115M encoder) from the multilingual encoder, so their weights cannot be dropped into the multilingual head; donor heads for the multilingual backbone are the multilingual model's own heads for other languages. The monolingual models remain useful as separate backbones.
