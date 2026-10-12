@@ -17,8 +17,10 @@ ASPIRATES_DEVANAGARI = set("घझढधभ")
 PLAIN_DEVANAGARI = set("गजडदब")
 
 
-def normalize(text, keep_tags=False):
+def normalize(text, keep_tags=False, drop_apos=False):
     t = unicodedata.normalize("NFC", text)
+    if drop_apos:
+        t = t.replace("'", "").replace("ʼ", "").replace("’", "")
     if not keep_tags:
         t = _BRACE.sub(r"\1", t)
         t = _TAG.sub(" ", t)
