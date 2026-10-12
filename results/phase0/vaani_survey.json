@@ -394,5 +394,814 @@
     5
    ]
   ]
+ },
+ "Kumaoni": {
+  "rows": 150,
+  "hours": 0.313,
+  "scripts": [
+   [
+    "DEVANAGARI",
+    7368
+   ]
+  ],
+  "top_tags": [
+   [
+    "[breathing]",
+    69
+   ],
+   [
+    "<noise>",
+    66
+   ],
+   [
+    "</noise>",
+    66
+   ],
+   [
+    "<pause>",
+    31
+   ],
+   [
+    "{color}",
+    29
+   ],
+   [
+    "{बहुत}",
+    23
+   ],
+   [
+    "[inhaling]",
+    20
+   ],
+   [
+    "[unintelligible]",
+    11
+   ]
+  ]
+ },
+ "Nagamese": {
+  "rows": 150,
+  "hours": 0.22,
+  "scripts": [
+   [
+    "LATIN",
+    9225
+   ]
+  ],
+  "top_tags": [
+   [
+    "<noise>",
+    35
+   ],
+   [
+    "</noise>",
+    35
+   ],
+   [
+    "<static_noise>",
+    34
+   ],
+   [
+    "</static_noise>",
+    34
+   ],
+   [
+    "{side}",
+    31
+   ],
+   [
+    "{colour}",
+    26
+   ],
+   [
+    "<pause>",
+    11
+   ],
+   [
+    "{photo}",
+    8
+   ]
+  ]
+ },
+ "Bhojpuri": {
+  "rows": 150,
+  "hours": 0.333,
+  "scripts": [
+   [
+    "DEVANAGARI",
+    6477
+   ]
+  ],
+  "top_tags": [
+   [
+    "<noise>",
+    42
+   ],
+   [
+    "</noise>",
+    42
+   ],
+   [
+    "{color}",
+    40
+   ],
+   [
+    "<static_noise>",
+    32
+   ],
+   [
+    "</static_noise>",
+    32
+   ],
+   [
+    "[inhaling]",
+    31
+   ],
+   [
+    "{park}",
+    12
+   ],
+   [
+    "{photo}",
+    12
+   ]
+  ]
+ },
+ "Marwari": {
+  "rows": 150,
+  "hours": 0.305,
+  "scripts": [
+   [
+    "DEVANAGARI",
+    6730
+   ]
+  ],
+  "top_tags": [
+   [
+    "<noise>",
+    77
+   ],
+   [
+    "</noise>",
+    77
+   ],
+   [
+    "[breathing]",
+    46
+   ],
+   [
+    "{color}",
+    28
+   ],
+   [
+    "<pause>",
+    14
+   ],
+   [
+    "[unintelligible]",
+    14
+   ],
+   [
+    "{side}",
+    13
+   ],
+   [
+    "{photo}",
+    12
+   ]
+  ]
+ },
+ "Magahi": {
+  "rows": 150,
+  "hours": 0.283,
+  "scripts": [
+   [
+    "DEVANAGARI",
+    5691
+   ]
+  ],
+  "top_tags": [
+   [
+    "<pause>",
+    69
+   ],
+   [
+    "<noise>",
+    34
+   ],
+   [
+    "</noise>",
+    34
+   ],
+   [
+    "[unintelligible]",
+    33
+   ],
+   [
+    "[inhaling]",
+    12
+   ],
+   [
+    "{photo}",
+    9
+   ],
+   [
+    "[breathing]",
+    7
+   ],
+   [
+    "{color}",
+    7
+   ]
+  ]
+ },
+ "Bajjika": {
+  "rows": 150,
+  "hours": 0.303,
+  "scripts": [
+   [
+    "DEVANAGARI",
+    6111
+   ]
+  ],
+  "top_tags": [
+   [
+    "<noise>",
+    59
+   ],
+   [
+    "</noise>",
+    59
+   ],
+   [
+    "<pause>",
+    43
+   ],
+   [
+    "[breathing]",
+    26
+   ],
+   [
+    "[unintelligible]",
+    16
+   ],
+   [
+    "[inhaling]",
+    15
+   ],
+   [
+    "<static_noise>",
+    15
+   ],
+   [
+    "</static_noise>",
+    15
+   ]
+  ]
+ },
+ "Maithili": {
+  "rows": 150,
+  "hours": 0.325,
+  "scripts": [
+   [
+    "DEVANAGARI",
+    7132
+   ]
+  ],
+  "top_tags": [
+   [
+    "<noise>",
+    63
+   ],
+   [
+    "</noise>",
+    63
+   ],
+   [
+    "[inhaling]",
+    55
+   ],
+   [
+    "[unintelligible]",
+    29
+   ],
+   [
+    "[breathing]",
+    29
+   ],
+   [
+    "<pause>",
+    19
+   ],
+   [
+    "<static_noise>",
+    11
+   ],
+   [
+    "</static_noise>",
+    11
+   ]
+  ]
+ },
+ "Nepali": {
+  "rows": 150,
+  "hours": 0.235,
+  "scripts": [
+   [
+    "DEVANAGARI",
+    4396
+   ]
+  ],
+  "top_tags": [
+   [
+    "[breathing]",
+    128
+   ],
+   [
+    "<pause>",
+    74
+   ],
+   [
+    "<static_noise>",
+    63
+   ],
+   [
+    "</static_noise>",
+    63
+   ],
+   [
+    "<static>",
+    36
+   ],
+   [
+    "</static>",
+    36
+   ],
+   [
+    "<noise>",
+    33
+   ],
+   [
+    "</noise>",
+    33
+   ]
+  ]
+ },
+ "Odia": {
+  "rows": 150,
+  "hours": 0.275,
+  "scripts": [
+   [
+    "ORIYA",
+    4781
+   ],
+   [
+    "BENGALI",
+    1458
+   ]
+  ],
+  "top_tags": [
+   [
+    "<pause>",
+    311
+   ],
+   [
+    "<noise>",
+    42
+   ],
+   [
+    "</noise>",
+    42
+   ],
+   [
+    "[breathing]",
+    24
+   ],
+   [
+    "<static>",
+    17
+   ],
+   [
+    "</static>",
+    17
+   ],
+   [
+    "<static_noise>",
+    16
+   ],
+   [
+    "</static_noise>",
+    16
+   ]
+  ]
+ },
+ "Konkani": {
+  "rows": 150,
+  "hours": 0.191,
+  "scripts": [
+   [
+    "DEVANAGARI",
+    4579
+   ]
+  ],
+  "top_tags": [
+   [
+    "<noise>",
+    39
+   ],
+   [
+    "</noise>",
+    39
+   ],
+   [
+    "{color}",
+    34
+   ],
+   [
+    "{side}",
+    23
+   ],
+   [
+    "[breathing]",
+    18
+   ],
+   [
+    "[unintelligible]",
+    17
+   ],
+   [
+    "<static_noise>",
+    12
+   ],
+   [
+    "</static_noise>",
+    12
+   ]
+  ]
+ },
+ "Punjabi": {
+  "rows": 150,
+  "hours": 0.244,
+  "scripts": [
+   [
+    "GURMUKHI",
+    5130
+   ]
+  ],
+  "top_tags": [
+   [
+    "<static_noise>",
+    49
+   ],
+   [
+    "</static_noise>",
+    49
+   ],
+   [
+    "[breathing]",
+    45
+   ],
+   [
+    "<noise>",
+    35
+   ],
+   [
+    "</noise>",
+    35
+   ],
+   [
+    "<pause>",
+    27
+   ],
+   [
+    "{building}",
+    12
+   ],
+   [
+    "<static>",
+    12
+   ]
+  ]
+ },
+ "Dogri": {
+  "rows": 0,
+  "hours": 0.0,
+  "scripts": [],
+  "top_tags": []
+ },
+ "Bodo": {
+  "error": "ValueError: BuilderConfig 'Bodo' not found. Available: ['Mara', 'Agariya', 'Angami', 'Angika', 'Ao', 'Assamese', 'Awadhi', 'Baghati', 'Bagheli', 'Bagri', 'Bajjika"
+ },
+ "Manipuri": {
+  "rows": 150,
+  "hours": 0.271,
+  "scripts": [
+   [
+    "MEETEI",
+    4613
+   ]
+  ],
+  "top_tags": [
+   [
+    "<pause>",
+    71
+   ],
+   [
+    "<static>",
+    45
+   ],
+   [
+    "</static>",
+    45
+   ],
+   [
+    "<noise>",
+    42
+   ],
+   [
+    "</noise>",
+    42
+   ],
+   [
+    "[inhaling]",
+    36
+   ],
+   [
+    "[unintelligible]",
+    23
+   ],
+   [
+    "<talking>",
+    11
+   ]
+  ]
+ },
+ "Santali": {
+  "rows": 79,
+  "hours": 0.115,
+  "scripts": [
+   [
+    "OL",
+    3513
+   ],
+   [
+    "DEVANAGARI",
+    263
+   ]
+  ],
+  "top_tags": [
+   [
+    "[unintelligible]",
+    14
+   ],
+   [
+    "<pause>",
+    8
+   ],
+   [
+    "[breathing]",
+    6
+   ],
+   [
+    "<noise>",
+    6
+   ],
+   [
+    "</noise>",
+    6
+   ],
+   [
+    "{side}",
+    4
+   ],
+   [
+    "{mall}",
+    3
+   ],
+   [
+    "{tempo}",
+    3
+   ]
+  ]
+ },
+ "Hindi": {
+  "rows": 150,
+  "hours": 0.344,
+  "scripts": [
+   [
+    "DEVANAGARI",
+    7975
+   ]
+  ],
+  "top_tags": [
+   [
+    "<noise>",
+    83
+   ],
+   [
+    "</noise>",
+    83
+   ],
+   [
+    "[breathing]",
+    81
+   ],
+   [
+    "{colour}",
+    20
+   ],
+   [
+    "{color}",
+    19
+   ],
+   [
+    "{building}",
+    10
+   ],
+   [
+    "<horn>",
+    10
+   ],
+   [
+    "</horn>",
+    10
+   ]
+  ]
+ },
+ "Bengali": {
+  "rows": 150,
+  "hours": 0.294,
+  "scripts": [
+   [
+    "BENGALI",
+    7730
+   ]
+  ],
+  "top_tags": [
+   [
+    "[inhaling]",
+    73
+   ],
+   [
+    "[inhale]",
+    62
+   ],
+   [
+    "<static_noise>",
+    18
+   ],
+   [
+    "</static_noise>",
+    18
+   ],
+   [
+    "{building}",
+    15
+   ],
+   [
+    "{bridge}",
+    15
+   ],
+   [
+    "<people_talking>",
+    14
+   ],
+   [
+    "</people_talking>",
+    14
+   ]
+  ]
+ },
+ "Marathi": {
+  "rows": 150,
+  "hours": 0.219,
+  "scripts": [
+   [
+    "DEVANAGARI",
+    5201
+   ]
+  ],
+  "top_tags": [
+   [
+    "<noise>",
+    81
+   ],
+   [
+    "</noise>",
+    81
+   ],
+   [
+    "[breathing]",
+    43
+   ],
+   [
+    "<pause>",
+    42
+   ],
+   [
+    "[unintelligible]",
+    27
+   ],
+   [
+    "{side}",
+    21
+   ],
+   [
+    "{color}",
+    10
+   ],
+   [
+    "<static_noise>",
+    8
+   ]
+  ]
+ },
+ "Assamese": {
+  "rows": 150,
+  "hours": 0.168,
+  "scripts": [
+   [
+    "BENGALI",
+    4037
+   ]
+  ],
+  "top_tags": [
+   [
+    "<noise>",
+    63
+   ],
+   [
+    "</noise>",
+    63
+   ],
+   [
+    "<static_noise>",
+    53
+   ],
+   [
+    "</static_noise>",
+    53
+   ],
+   [
+    "<pause>",
+    50
+   ],
+   [
+    "<static>",
+    12
+   ],
+   [
+    "</static>",
+    12
+   ],
+   [
+    "{photocopy}",
+    9
+   ]
+  ]
+ },
+ "Kannada": {
+  "rows": 150,
+  "hours": 0.268,
+  "scripts": [
+   [
+    "KANNADA",
+    6061
+   ]
+  ],
+  "top_tags": [
+   [
+    "<noise>",
+    30
+   ],
+   [
+    "</noise>",
+    30
+   ],
+   [
+    "<pause>",
+    23
+   ],
+   [
+    "<static_noise>",
+    15
+   ],
+   [
+    "</static_noise>",
+    15
+   ],
+   [
+    "[inhaling]",
+    15
+   ],
+   [
+    "[breathing]",
+    8
+   ],
+   [
+    "{car}",
+    7
+   ]
+  ]
  }
 }

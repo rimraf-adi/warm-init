@@ -7,8 +7,8 @@ Results of every run go to `results/runs.jsonl` through `tone_donor.runlog.log_r
 
 | Phase | State | Evidence |
 |---|---|---|
-| 0. Verify and set up | In progress | see entries below |
-| 1. Kill test (H2) | Not started | waits on NeMo env and Dogri splits |
+| 0. Verify and set up | Mostly done | env, data access, splits, metric, survey; open: grammar check of Dogri tone, VAANI scripts mapped (see survey entry) |
+| 1. Kill test (H2) | Running | head-only grid on the Hindi-only encoder (baseline) and multilingual-backbone runs; Gate 1 not decided |
 | 2. Mechanism (H1) | Not started | gated on Gate 1 |
 | 3. Main grid (H3-H5) | Not started | gated on Gate 2 |
 | 4. Write and submit | Not started | |
@@ -76,3 +76,12 @@ The plan names IndicConformer-600M-Multi. That checkpoint (`ai4bharat/indic-conf
   - Hindi head on Dogri audio: CTC 0.343 / 0.702, RNNT 0.450 / 0.742.
   Reading (mine): with the own head, ha-tone errors are below overall error; with the Hindi head they are about twice overall error. This is the zero-shot version of the H2 pattern, in the multilingual model.
 - All 22 monolingual `indicconformer_stt_<code>` checkpoints became readable after the account owner accepted their terms. Their heads live in a different feature space (115M encoder) from the multilingual encoder, so their weights cannot be dropped into the multilingual head; donor heads for the multilingual backbone are the multilingual model's own heads for other languages. The monolingual models remain useful as separate backbones.
+
+
+### 2026-10-13: VAANI survey results (`results/phase0/vaani_survey.json`)
+Sample: first 150 transcribed rows per language (0.12-0.34 h each), from `tone_donor.survey`. Dominant script by character count in that sample:
+- Latin: Mizo, Wancho, Kokborok, Sumi, Garo, Chakma, Nagamese. Chakma is written in Latin in VAANI, not in Chakma script.
+- Devanagari: Chhattisgarhi, Garhwali, Kumaoni, Bhojpuri, Marwari, Magahi, Bajjika, Maithili, Nepali, Konkani, Hindi, Marathi.
+- Kannada script: Tulu, Kannada. Gurmukhi: Punjabi. Meetei Mayek: Manipuri. Ol Chiki: Santali (79 transcribed rows found, 263 Devanagari characters mixed in). Odia: mostly Odia script with 1,458 Bengali-block characters. Bengali and Assamese both show the Bengali-Assamese block.
+- Dogri: 0 transcribed rows in VAANI (as in the plan; use IndicVoices). Bodo: config `Bodo` does not exist in VAANI (use IndicVoices).
+Caveat: counts come from a small head-of-file sample; tag counts per language are in the JSON. The Latin-script languages need a grapheme mapping before any cross-script donor copy (open item for Mizo/Manipuri donors).

@@ -2,7 +2,7 @@
 
 - `runs.jsonl`: append-only log, one line per run. Written only through `tone_donor.runlog.log_run`.
 - `RESULTS.md`: tables rebuilt from the log by `uv run python -m tone_donor.report`. Never edited by hand.
-- `phase0/` setup evidence: `vaani_survey.json` (script and tag counts per language), data audits.
+- `phase0/` setup evidence: `vaani_survey.json` (script and tag counts per language; 29 languages), `survey.log`.
 - `phase1/` kill test: per-run predictions (`<run_id>.jsonl` with ref and hyp), confusion matrices, permutation test output.
 - `phase2/` mechanism: per-layer tone-probe accuracy tables.
 - `phase3/` main grid outputs and mixed-effects fits.

@@ -1,7 +1,7 @@
 # Results
 
 Generated from `results/runs.jsonl`; do not edit by hand.
-Runs logged: 8
+Runs logged: 18
 
 ## Stage: phase0-smoke
 
@@ -15,5 +15,20 @@ Runs logged: 8
 | phase0-smoke-dogri-own-head-doi-INVALID-1791831460 | dogri | hi | own-head-doi-INVALID |  |  |  |  |  |  |  | 200 | invalid | c220276* |
 | phase0-smoke-dogri-zero-shot-hi-1791830235 | dogri | hi | zero-shot-hi |  |  |  | 0.413 | 0.794 | 1282 |  | 200 | done | 9bb9189* |
 | phase0-smoke-dogri-zero-shot-hi-1791830287 | dogri | hi | zero-shot-hi |  |  |  | 0.422 | 0.789 | 1282 |  | 200 | done | 9bb9189* |
+
+## Stage: phase1
+
+| run | target | donor | init | budget h | seed | WER | CER | tone CER | tone chars | CI | utts | status | commit |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| phase1-dogri-hindi-1791832790 | dogri | hi | hindi | 0.262 | 0 | 0.669 | 0.331 | 0.501 | 4852 |  | 969 | done | a57c406* |
+| phase1-dogri-hindi-1791833880 | dogri | hi | hindi | 0.262 | 0 | 0.669 | 0.331 | 0.501 | 4852 |  | 969 | done | 7f5ba89* |
+| phase1-dogri-hindi-1791834921 | dogri | hi | hindi | 0.262 | 1 | 0.669 | 0.334 | 0.496 | 4852 |  | 969 | done | 7f5ba89* |
+| phase1-dogri-hindi-1791835979 | dogri | hi | hindi | 0.262 | 2 | 0.668 | 0.333 | 0.501 | 4852 |  | 969 | done | 7f5ba89* |
+| phase1-dogri-hindi-1791837190 | dogri | hi | hindi | 1.020 | 0 | 0.603 | 0.294 | 0.403 | 4852 |  | 969 | done | 7f5ba89* |
+| phase1-dogri-random-1791833301 | dogri |  | random | 0.262 | 0 | 0.713 | 0.369 | 0.561 | 4852 |  | 969 | done | 7f5ba89* |
+| phase1-dogri-random-1791834347 | dogri |  | random | 0.262 | 1 | 0.703 | 0.365 | 0.533 | 4852 |  | 969 | done | 7f5ba89* |
+| phase1-dogri-random-1791835402 | dogri |  | random | 0.262 | 2 | 0.717 | 0.369 | 0.564 | 4852 |  | 969 | done | 7f5ba89* |
+| phase1-dogri-random-1791836562 | dogri |  | random | 1.020 | 0 | 0.613 | 0.303 | 0.413 | 4852 |  | 969 | done | 7f5ba89* |
+| phase1-dogri-random-1791838198 | dogri |  | random | 1.020 | 1 | 0.612 | 0.302 | 0.411 | 4852 |  | 969 | done | 0a8bbf3* |
 
 `*` after a commit means the working tree had uncommitted changes when the run started.

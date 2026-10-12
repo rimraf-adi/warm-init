@@ -2,7 +2,7 @@
 
 Oct 12, 2026 · @aditya
 
-> Saved as pasted. A novelty check run the same day is in [novelty-check.md](novelty-check.md); it narrows gaps 1, 4 and 5 and corrects the Dogri orthography assumption. This file has not been edited to reflect it.
+> Saved as pasted; the body below is unchanged. Later changes live elsewhere: see [README.md](README.md) for the layout and [NOTES.md](NOTES.md) for status and decisions. Known differences from this plan: the multilingual backbone is `ai4bharat/IndicConformer` (NeMo, 628M), not the ONNX `indic-conformer-600m-multilingual` release; Dogri tone is marked by ह् and an apostrophe rather than the aspirate letters listed under H2; [novelty-check.md](novelty-check.md) narrows gaps 1, 4 and 5.
 
 ## Summary
 
