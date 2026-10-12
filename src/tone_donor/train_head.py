@@ -49,20 +49,40 @@ def build_head(model, init, seed):
     if init == "own":
         newW, newb = W[cols_d, :, 0].clone(), b[cols_d].clone()
         copied = len(sp_d)
-    donor = "hi" if init == "hindi" else (init.split("-", 1)[1] if init.startswith("donor-") else None)
+    base, _, fill = init.partition("+")          # e.g. donor-pa+mean, donor-pa+comp
+    donor = "hi" if base == "hindi" else (base.split("-", 1)[1] if base.startswith("donor-") else None)
     if donor:
         cols_s = lang_columns(model, donor)
         s_index = {}
         for i, piece in enumerate(pieces(model, donor)):
             s_index.setdefault(to_devanagari(piece, donor), i)
+        matched = []
         for j, s in enumerate(sp_d):
             if s in s_index:
                 src = cols_s[s_index[s]]
                 newW[j] = W[src, :, 0]
                 newb[j] = b[src]
+                matched.append(j)
                 copied += 1
         newW[-1] = W[cols_s[-1], :, 0]
         newb[-1] = b[cols_s[-1]]
+        if fill in ("mean", "comp"):
+            mW, mb = newW[matched].mean(0), newb[matched].mean(0)
+            mset = set(matched)
+            for j, s in enumerate(sp_d):
+                if j in mset:
+                    continue
+                rows, bs = [], []
+                if fill == "comp":
+                    for ch in s.replace("▁", ""):
+                        k = s_index.get(ch)
+                        if k is not None:
+                            rows.append(W[cols_s[k], :, 0])
+                            bs.append(b[cols_s[k]])
+                if rows:
+                    newW[j], newb[j] = torch.stack(rows).mean(0), torch.stack(bs).mean(0)
+                else:
+                    newW[j], newb[j] = mW, mb
     head = torch.nn.Linear(W.shape[1], len(cols_d))
     head.weight.data, head.bias.data = newW, newb
     return head.cuda(), copied, len(sp_d)
@@ -168,7 +188,7 @@ def train_one(model, data, init, hours, seed):
         for r, h in pairs:
             f.write(json.dumps({"ref": r, "hyp": h}, ensure_ascii=False) + "\n")
     t = res["test"]
-    log_run(stage="phase1", hypothesis="H2", target="dogri", donor={"hindi": "hi", "own": "doi"}.get(init) or (init.split("-", 1)[1] if init.startswith("donor-") else None),
+    log_run(stage="phase1", hypothesis="H2", target="dogri", donor={"hindi": "hi", "own": "doi"}.get(init) or (init.split("+")[0].split("-", 1)[1] if init.startswith("donor-") else None),
             init=init, budget_h=round(tot / 3600, 3), seed=seed, backbone=("indicconformer_multi_frozen_encoder" if tag == "multi" else "indicconformer_hi_frozen_encoder"),
             split="speaker-disjoint test (IndicVoices valid, alternating speakers)", n_utts=len(test),
             wer=t["wer"], cer=t["cer"], tone_cer=t["ha_tone_cer"], tone_chars=t["n_ha"],
