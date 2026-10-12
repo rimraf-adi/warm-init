@@ -614,5 +614,49 @@
     7
    ]
   ]
+ },
+ "Bajjika": {
+  "rows": 150,
+  "hours": 0.303,
+  "scripts": [
+   [
+    "DEVANAGARI",
+    6111
+   ]
+  ],
+  "top_tags": [
+   [
+    "<noise>",
+    59
+   ],
+   [
+    "</noise>",
+    59
+   ],
+   [
+    "<pause>",
+    43
+   ],
+   [
+    "[breathing]",
+    26
+   ],
+   [
+    "[unintelligible]",
+    16
+   ],
+   [
+    "[inhaling]",
+    15
+   ],
+   [
+    "<static_noise>",
+    15
+   ],
+   [
+    "</static_noise>",
+    15
+   ]
+  ]
  }
 }
