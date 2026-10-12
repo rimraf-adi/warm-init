@@ -1,7 +1,7 @@
 # Results
 
 Generated from `results/runs.jsonl`; do not edit by hand.
-Runs logged: 107
+Runs logged: 124
 
 ## Stage: phase0-smoke
 
@@ -119,5 +119,27 @@ Runs logged: 107
 | phase1-dogri-random-1791842152 | dogri |  | random | 5.016 | 1 | 0.332 | 0.153 | 0.127 | 4852 |  | 969 | done | 1f7a844* |
 | phase1-dogri-random-1791840126 | dogri |  | random | 5.016 | 2 | 0.552 | 0.263 | 0.318 | 4852 |  | 969 | done | 28e6dc8* |
 | phase1-dogri-random-1791842391 | dogri |  | random | 5.016 | 2 | 0.332 | 0.153 | 0.132 | 4852 |  | 969 | done | 1f7a844* |
+
+## Stage: step1-zero-shot
+
+| run | target | donor | init | budget h | seed | WER | CER | tone CER | tone chars | CI | utts | status | commit |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| step1-zero-shot-dogri-zero-shot-head-as-1791849200 | dogri | as | zero-shot-head-as |  |  | 0.963 | 0.486 | 0.766 | 4852 |  | 969 | done | c473f74* |
+| step1-zero-shot-dogri-zero-shot-head-bn-1791849209 | dogri | bn | zero-shot-head-bn |  |  | 0.903 | 0.454 | 0.761 | 4852 |  | 969 | done | c473f74* |
+| step1-zero-shot-dogri-zero-shot-head-brx-1791849217 | dogri | brx | zero-shot-head-brx |  |  | 0.952 | 0.550 | 0.772 | 4852 |  | 969 | done | c473f74* |
+| step1-zero-shot-dogri-zero-shot-head-doi-1791849228 | dogri | doi | zero-shot-head-doi |  |  | 0.311 | 0.145 | 0.113 | 4852 |  | 969 | done | c473f74* |
+| step1-zero-shot-dogri-zero-shot-head-gu-1791849247 | dogri | gu | zero-shot-head-gu |  |  | 0.839 | 0.400 | 0.751 | 4852 |  | 969 | done | c473f74* |
+| step1-zero-shot-dogri-zero-shot-head-hi-1791849257 | dogri | hi | zero-shot-head-hi |  |  | 0.759 | 0.338 | 0.654 | 4852 |  | 969 | done | c473f74* |
+| step1-zero-shot-dogri-zero-shot-head-kn-1791849265 | dogri | kn | zero-shot-head-kn |  |  | 0.933 | 0.490 | 0.739 | 4852 |  | 969 | done | c473f74* |
+| step1-zero-shot-dogri-zero-shot-head-kok-1791849237 | dogri | kok | zero-shot-head-kok |  |  | 0.826 | 0.402 | 0.788 | 4852 |  | 969 | done | c473f74* |
+| step1-zero-shot-dogri-zero-shot-head-mai-1791849275 | dogri | mai | zero-shot-head-mai |  |  | 0.795 | 0.364 | 0.691 | 4852 |  | 969 | done | c473f74* |
+| step1-zero-shot-dogri-zero-shot-head-ml-1791849284 | dogri | ml | zero-shot-head-ml |  |  | 0.955 | 0.561 | 0.846 | 4852 |  | 969 | done | c473f74* |
+| step1-zero-shot-dogri-zero-shot-head-mr-1791849293 | dogri | mr | zero-shot-head-mr |  |  | 0.829 | 0.390 | 0.671 | 4852 |  | 969 | done | c473f74* |
+| step1-zero-shot-dogri-zero-shot-head-ne-1791849303 | dogri | ne | zero-shot-head-ne |  |  | 0.874 | 0.426 | 0.706 | 4852 |  | 969 | done | c473f74* |
+| step1-zero-shot-dogri-zero-shot-head-or-1791849313 | dogri | or | zero-shot-head-or |  |  | 0.903 | 0.460 | 0.735 | 4852 |  | 969 | done | c473f74* |
+| step1-zero-shot-dogri-zero-shot-head-pa-1791849324 | dogri | pa | zero-shot-head-pa |  |  | 0.821 | 0.361 | 0.516 | 4852 |  | 969 | done | c473f74* |
+| step1-zero-shot-dogri-zero-shot-head-sa-1791849332 | dogri | sa | zero-shot-head-sa |  |  | 0.882 | 0.447 | 0.774 | 4852 |  | 969 | done | c473f74* |
+| step1-zero-shot-dogri-zero-shot-head-ta-1791849342 | dogri | ta | zero-shot-head-ta |  |  | 0.985 | 0.635 | 0.892 | 4852 |  | 969 | done | c473f74* |
+| step1-zero-shot-dogri-zero-shot-head-te-1791849351 | dogri | te | zero-shot-head-te |  |  | 0.921 | 0.472 | 0.857 | 4852 |  | 969 | done | c473f74* |
 
 `*` after a commit means the working tree had uncommitted changes when the run started.

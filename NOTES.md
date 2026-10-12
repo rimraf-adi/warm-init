@@ -236,3 +236,32 @@ Reading (mine):
 - This is a calibration effect of copying a CTC blank row. It is the same for the tonal donor (Punjabi) and the non-tonal donors, so it says nothing about tone. The random-init arm also deletes ह/virama more than any other class (0.121 deleted vs 0.055 substituted), consistent with those characters being weak in the audio.
 - Status of the hypotheses on this setup (head-only, frozen multilingual encoder, Dogri): H2 as phrased (a same-script non-tonal donor concentrates errors on tone contexts) is not distinguishable from a generic copied-head effect; H3 (a tonal donor wins at low data) is not supported; no donor head beats random init at any budget on CER. Head-copy initialisation is not where a family effect should be looked for. The encoder-adapter and zero-shot-sweep steps of the roadmap are next.
 - Not yet tested: scaling of copied rows, other fills of the blank, other targets (Punjabi, Bodo), unseen languages.
+
+### 2026-10-13: Step 1, zero-shot sweep of all language heads on Dogri (`python -m tone_donor.zero_shot_sweep`, output `results/phase1/zero_shot_sweep_dogri_test.json`)
+Multilingual encoder, cached final-layer features of the 969-utterance speaker-disjoint Dogri test set, greedy CTC with each language's output columns, text mapped to Devanagari by Unicode offset, scored against the Dogri reference (no training, one run per head, no CIs). Five heads (ks, mni, sat, sd, ur) have no offset mapping and are not scored. Check: the own Dogri head gives CER 0.145 on this set via cached features, matching the transcribe-based 0.144 on the first 100 validation utterances, so the cached-feature path is faithful.
+
+| head | family | tonal (general knowledge) | CER | WER | tone CER |
+|---|---|---|---|---|---|
+| doi (own) | Indo-Aryan | tonal | 0.145 | 0.311 | 0.113 |
+| hi | Indo-Aryan | non-tonal | 0.338 | 0.759 | 0.654 |
+| pa | Indo-Aryan | tonal | 0.361 | 0.821 | 0.516 |
+| mai | Indo-Aryan | non-tonal | 0.364 | 0.795 | 0.691 |
+| mr | Indo-Aryan | non-tonal | 0.390 | 0.829 | 0.671 |
+| gu | Indo-Aryan | non-tonal | 0.400 | 0.839 | 0.751 |
+| kok | Indo-Aryan | non-tonal | 0.402 | 0.826 | 0.788 |
+| ne | Indo-Aryan | non-tonal | 0.426 | 0.874 | 0.706 |
+| sa | Indo-Aryan | non-tonal | 0.447 | 0.882 | 0.774 |
+| bn | Indo-Aryan | non-tonal | 0.454 | 0.903 | 0.761 |
+| or | Indo-Aryan | non-tonal | 0.460 | 0.903 | 0.735 |
+| te | Dravidian | non-tonal | 0.472 | 0.921 | 0.857 |
+| as | Indo-Aryan | non-tonal | 0.486 | 0.963 | 0.766 |
+| kn | Dravidian | non-tonal | 0.490 | 0.933 | 0.739 |
+| brx | Tibeto-Burman | tonal | 0.550 | 0.952 | 0.772 |
+| ml | Dravidian | non-tonal | 0.561 | 0.955 | 0.846 |
+| ta | Dravidian | non-tonal | 0.635 | 0.985 | 0.892 |
+
+Reading (mine):
+1. Inference-side family effect: Indo-Aryan heads decode Dogri audio far better than Dravidian or Tibeto-Burman heads (CER 0.34-0.49 vs 0.47-0.64), and Hindi and Punjabi are the closest.
+2. Tonal Punjabi has by far the lowest tone-character error among the non-own heads (0.516 vs 0.654 for Hindi and 0.67-0.89 for the others) although its overall CER is slightly worse than Hindi's (0.361 vs 0.338). This is the first result in favour of the tone-aware donor idea, on the inference side, and it points the opposite way from the head-copy results (where all donors were alike).
+3. Tonality alone does not explain it: Bodo (tonal, Tibeto-Burman, Devanagari script) decodes poorly (CER 0.550, tone CER 0.772). Closeness to Dogri (Western Pahari / Punjabi area) seems to matter more, which is why the plan separates tone from relatedness (H4).
+Caveats: single run per head and no confidence intervals (predictions were not saved; rerun with saved hypotheses before any claim); Gurmukhi is mapped to Devanagari by code-point offset, and Punjabi writes tone through consonant letters (the voiced aspirates and ha), not through a ha-virama sequence, so the tone-character score for the Punjabi head depends on how that mapping lines up with Dogri's ha-virama spelling; tonal labels are general knowledge and unverified; Dogri was seen by the model.
