@@ -838,5 +838,49 @@
     12
    ]
   ]
+ },
+ "Punjabi": {
+  "rows": 150,
+  "hours": 0.244,
+  "scripts": [
+   [
+    "GURMUKHI",
+    5130
+   ]
+  ],
+  "top_tags": [
+   [
+    "<static_noise>",
+    49
+   ],
+   [
+    "</static_noise>",
+    49
+   ],
+   [
+    "[breathing]",
+    45
+   ],
+   [
+    "<noise>",
+    35
+   ],
+   [
+    "</noise>",
+    35
+   ],
+   [
+    "<pause>",
+    27
+   ],
+   [
+    "{building}",
+    12
+   ],
+   [
+    "<static>",
+    12
+   ]
+  ]
  }
 }
