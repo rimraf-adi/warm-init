@@ -702,5 +702,97 @@
     11
    ]
   ]
+ },
+ "Nepali": {
+  "rows": 150,
+  "hours": 0.235,
+  "scripts": [
+   [
+    "DEVANAGARI",
+    4396
+   ]
+  ],
+  "top_tags": [
+   [
+    "[breathing]",
+    128
+   ],
+   [
+    "<pause>",
+    74
+   ],
+   [
+    "<static_noise>",
+    63
+   ],
+   [
+    "</static_noise>",
+    63
+   ],
+   [
+    "<static>",
+    36
+   ],
+   [
+    "</static>",
+    36
+   ],
+   [
+    "<noise>",
+    33
+   ],
+   [
+    "</noise>",
+    33
+   ]
+  ]
+ },
+ "Odia": {
+  "rows": 150,
+  "hours": 0.275,
+  "scripts": [
+   [
+    "ORIYA",
+    4781
+   ],
+   [
+    "BENGALI",
+    1458
+   ]
+  ],
+  "top_tags": [
+   [
+    "<pause>",
+    311
+   ],
+   [
+    "<noise>",
+    42
+   ],
+   [
+    "</noise>",
+    42
+   ],
+   [
+    "[breathing]",
+    24
+   ],
+   [
+    "<static>",
+    17
+   ],
+   [
+    "</static>",
+    17
+   ],
+   [
+    "<static_noise>",
+    16
+   ],
+   [
+    "</static_noise>",
+    16
+   ]
+  ]
  }
 }

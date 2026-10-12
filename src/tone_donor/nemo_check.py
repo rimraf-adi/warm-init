@@ -50,8 +50,9 @@ def main(code, iv_lang, n):
 
     out = {}
     for dec in ("ctc", "rnnt"):
-        model.change_decoding_strategy(decoder_type=dec)
-        hyp = model.transcribe(files, batch_size=8)
+        model.cur_decoder = dec
+        kw = {"logprobs": False} if dec == "ctc" else {}
+        hyp = model.transcribe(files, batch_size=8, language_id=code, **kw)
         if isinstance(hyp, tuple):
             hyp = hyp[0]
         hyp = [h.text if hasattr(h, "text") else h for h in hyp]
