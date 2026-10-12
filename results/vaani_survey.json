@@ -1071,5 +1071,137 @@
     14
    ]
   ]
+ },
+ "Marathi": {
+  "rows": 150,
+  "hours": 0.219,
+  "scripts": [
+   [
+    "DEVANAGARI",
+    5201
+   ]
+  ],
+  "top_tags": [
+   [
+    "<noise>",
+    81
+   ],
+   [
+    "</noise>",
+    81
+   ],
+   [
+    "[breathing]",
+    43
+   ],
+   [
+    "<pause>",
+    42
+   ],
+   [
+    "[unintelligible]",
+    27
+   ],
+   [
+    "{side}",
+    21
+   ],
+   [
+    "{color}",
+    10
+   ],
+   [
+    "<static_noise>",
+    8
+   ]
+  ]
+ },
+ "Assamese": {
+  "rows": 150,
+  "hours": 0.168,
+  "scripts": [
+   [
+    "BENGALI",
+    4037
+   ]
+  ],
+  "top_tags": [
+   [
+    "<noise>",
+    63
+   ],
+   [
+    "</noise>",
+    63
+   ],
+   [
+    "<static_noise>",
+    53
+   ],
+   [
+    "</static_noise>",
+    53
+   ],
+   [
+    "<pause>",
+    50
+   ],
+   [
+    "<static>",
+    12
+   ],
+   [
+    "</static>",
+    12
+   ],
+   [
+    "{photocopy}",
+    9
+   ]
+  ]
+ },
+ "Kannada": {
+  "rows": 150,
+  "hours": 0.268,
+  "scripts": [
+   [
+    "KANNADA",
+    6061
+   ]
+  ],
+  "top_tags": [
+   [
+    "<noise>",
+    30
+   ],
+   [
+    "</noise>",
+    30
+   ],
+   [
+    "<pause>",
+    23
+   ],
+   [
+    "<static_noise>",
+    15
+   ],
+   [
+    "</static_noise>",
+    15
+   ],
+   [
+    "[inhaling]",
+    15
+   ],
+   [
+    "[breathing]",
+    8
+   ],
+   [
+    "{car}",
+    7
+   ]
+  ]
  }
 }

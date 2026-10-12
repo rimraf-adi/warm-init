@@ -30,8 +30,7 @@ def lang_columns(model, lang):
 
 
 def token_strings(tk, lang):
-    t = tk.tokenizers_dict[lang]
-    return [t.id_to_piece(i) for i in range(t.get_piece_size())] if hasattr(t, "id_to_piece") else None
+    return list(tk.tokenizers_dict[lang].vocab)      # 256 sentencepiece pieces, local ids
 
 
 def build_head(model, init, seed):

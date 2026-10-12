@@ -22,3 +22,8 @@ Dogri 0 []
 Bodo ERROR ValueError: BuilderConfig 'Bodo' not found. Available: ['Mara', 'Agariya', 'Angami', 'Angika', 'Ao', 'Assamese', 'Awadhi', 'Baghati', 'Bagheli', 'Bagri', 'Bajjika
 Manipuri 150 [('MEETEI', 4613)]
 Santali 79 [('OL', 3513), ('DEVANAGARI', 263)]
+Hindi 150 [('DEVANAGARI', 7975)]
+Bengali 150 [('BENGALI', 7730)]
+Marathi 150 [('DEVANAGARI', 5201)]
+Assamese 150 [('BENGALI', 4037)]
+Kannada 150 [('KANNADA', 6061)]
