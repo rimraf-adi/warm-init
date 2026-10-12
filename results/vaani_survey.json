@@ -983,5 +983,93 @@
     3
    ]
   ]
+ },
+ "Hindi": {
+  "rows": 150,
+  "hours": 0.344,
+  "scripts": [
+   [
+    "DEVANAGARI",
+    7975
+   ]
+  ],
+  "top_tags": [
+   [
+    "<noise>",
+    83
+   ],
+   [
+    "</noise>",
+    83
+   ],
+   [
+    "[breathing]",
+    81
+   ],
+   [
+    "{colour}",
+    20
+   ],
+   [
+    "{color}",
+    19
+   ],
+   [
+    "{building}",
+    10
+   ],
+   [
+    "<horn>",
+    10
+   ],
+   [
+    "</horn>",
+    10
+   ]
+  ]
+ },
+ "Bengali": {
+  "rows": 150,
+  "hours": 0.294,
+  "scripts": [
+   [
+    "BENGALI",
+    7730
+   ]
+  ],
+  "top_tags": [
+   [
+    "[inhaling]",
+    73
+   ],
+   [
+    "[inhale]",
+    62
+   ],
+   [
+    "<static_noise>",
+    18
+   ],
+   [
+    "</static_noise>",
+    18
+   ],
+   [
+    "{building}",
+    15
+   ],
+   [
+    "{bridge}",
+    15
+   ],
+   [
+    "<people_talking>",
+    14
+   ],
+   [
+    "</people_talking>",
+    14
+   ]
+  ]
  }
 }
