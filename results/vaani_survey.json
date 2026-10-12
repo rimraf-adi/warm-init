@@ -794,5 +794,49 @@
     16
    ]
   ]
+ },
+ "Konkani": {
+  "rows": 150,
+  "hours": 0.191,
+  "scripts": [
+   [
+    "DEVANAGARI",
+    4579
+   ]
+  ],
+  "top_tags": [
+   [
+    "<noise>",
+    39
+   ],
+   [
+    "</noise>",
+    39
+   ],
+   [
+    "{color}",
+    34
+   ],
+   [
+    "{side}",
+    23
+   ],
+   [
+    "[breathing]",
+    18
+   ],
+   [
+    "[unintelligible]",
+    17
+   ],
+   [
+    "<static_noise>",
+    12
+   ],
+   [
+    "</static_noise>",
+    12
+   ]
+  ]
  }
 }

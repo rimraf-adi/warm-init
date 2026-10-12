@@ -16,7 +16,7 @@ from datasets import Audio, load_dataset
 from huggingface_hub import hf_hub_download
 
 from tone_donor.runlog import log_run
-from tone_donor.text import normalize, tone_cer
+from tone_donor.text import ASPIRATES_DEVANAGARI, PLAIN_DEVANAGARI, charset_cer, normalize, tone_cer
 from tone_donor.vaani_stream import _load_dotenv
 
 
@@ -58,14 +58,18 @@ def main(code, iv_lang, n):
         hyp = [h.text if hasattr(h, "text") else h for h in hyp]
         hyp = [normalize(h) for h in hyp]
         m = tone_cer(list(zip(refs, hyp)), iv_lang if iv_lang in ("dogri", "punjabi") else "dogri")
+        pairs = list(zip(refs, hyp))
+        asp, n_asp = charset_cer(pairs, ASPIRATES_DEVANAGARI)
+        pln, n_pln = charset_cer(pairs, PLAIN_DEVANAGARI)
+        m.update(aspirate_cer=asp, plain_cer=pln, n_asp=n_asp, n_plain=n_pln)
         out[dec] = (m, hyp[:2])
         print(dec, m, flush=True)
         print("  ref:", refs[0], "\n  hyp:", hyp[0], flush=True)
-        log_run(stage="phase0-smoke", target=iv_lang, donor=code, init="own-head", budget_h=None,
+        log_run(stage="phase0-smoke", target=iv_lang, donor=code, init="zero-shot-" + code, budget_h=None,
                 backbone=f"indicconformer_{code}", split="IndicVoices-valid-first-n", n_utts=len(files),
-                cer=m["cer"], tone_cer=m["tone_cer"], tone_chars=m["tone_chars"],
+                cer=m["cer"], aspirate_cer=m["aspirate_cer"], plain_cer=m["plain_cer"], tone_cer=m["tone_cer"], tone_chars=m["tone_chars"],
                 config={"decoder": dec, "n": n, "audio_h": round(secs / 3600, 3)},
-                notes="pretrained checkpoint, no fine-tuning; first n valid utterances, not speaker-disjoint audit")
+                notes="pretrained checkpoint, no fine-tuning; first n valid utterances; supersedes earlier phase0-smoke runs labelled own-head (wrong label: these are zero-shot Hindi)")
 
 
 if __name__ == "__main__":

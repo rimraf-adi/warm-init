@@ -84,3 +84,15 @@ def tone_cer(pairs, lang):
         e, n, te, tn = cer_stats(ref, hyp, tone_positions(ref, lang))
         E += e; N += n; TE += te; TN += tn
     return {"cer": E / max(N, 1), "tone_cer": TE / max(TN, 1), "tone_chars": TN, "chars": N}
+
+
+def charset_cer(pairs, chars):
+    """CER restricted to reference positions whose character is in `chars`."""
+    errs = n = 0
+    for ref, hyp in pairs:
+        err, _ = _align(ref, hyp)
+        for i, ch in enumerate(ref):
+            if ch in chars:
+                n += 1
+                errs += err[i]
+    return errs / max(n, 1), n
