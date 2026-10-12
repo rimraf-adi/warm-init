@@ -106,6 +106,13 @@ def evaluate(model, head, items):
             "aspirate_cer": asp, "n_asp": n_asp, "plain_cer": pln, "n_plain": n_pln}, pairs
 
 
+def fast_cer(model, head, items):
+    """Plain CER via C edit distance (same value as the full metric's CER); used for model selection."""
+    hyps = [normalize(h, drop_apos=True) for h in decode(model, head, items)]
+    e = sum(editdistance.eval(it["text"], h) for it, h in zip(items, hyps))
+    return e / max(sum(len(it["text"]) for it in items), 1)
+
+
 def train_one(model, data, init, hours, seed):
     train, dev, test = data
     random.seed(seed)
@@ -138,10 +145,10 @@ def train_one(model, data, init, hours, seed):
             tl += loss.item()
             nb += 1
         head.eval()
-        m, _ = evaluate(model, head, dev[:300])
-        hist.append({"epoch": ep, "train_loss": tl / nb, "dev_cer": m["cer"]})
-        if m["cer"] < best:
-            best = m["cer"]
+        dcer = fast_cer(model, head, dev[:300])
+        hist.append({"epoch": ep, "train_loss": tl / nb, "dev_cer": dcer})
+        if dcer < best:
+            best = dcer
             best_state = {k: v.clone() for k, v in head.state_dict().items()}
     print(f"  last epoch loss {hist[-1]['train_loss']} best dev300 CER {best:.4f}", flush=True)
     head.load_state_dict(best_state)
@@ -164,7 +171,7 @@ def train_one(model, data, init, hours, seed):
             config={"epochs": EPOCHS, "lr": LR, "bs": BS, "trained": "ctc head columns only", "tokens_copied": copied,
                     "requested_hours": hours, "dev": res["dev"], "history_last": hist[-3:],
                     "apostrophe": "dropped from text", "tone_chars": "ha + virama only",
-                    "model_selection": "best dev-300 CER", "impl": "gpu-cached v2 (same protocol as v1)", "backbone_tag": tag},
+                    "model_selection": "best dev-300 CER", "impl": "gpu-cached v3 (same protocol as v1; per-epoch dev CER via editdistance)", "backbone_tag": tag},
             artifacts={"predictions": f"results/phase1/{rid}.jsonl"},
             notes="kill test arm; encoder frozen; head-only training")
     print("TEST", json.dumps(t), flush=True)
