@@ -180,3 +180,28 @@ Reading (mine) and limits:
 - This does not yet show the cause is tone. A mismatched donor head could hurt ह for other reasons. Needed: other non-tonal donors (Marathi, Nepali, Bengali) and the tonal donor (Punjabi, cross-script), compared on the same metric. The control set (गपम) is easier per character than ह, so the +0.03 to +0.06 floor in the random and own arms is expected and the contrast between arms is what matters.
 - On the Hindi-only encoder the picture differed (Hindi-init helped at 0.25 h). The result depends on the backbone and must be reported per backbone.
 - Own head: one run, no seeds. Dogri was seen by this model. Test set composition differs from train (see data audit entry).
+
+### 2026-10-13: donor-head grid on the multilingual encoder (Punjabi, Marathi, Nepali, Bengali) and a token-coverage finding
+Runs: `donor-<code>` arms copy the donor's head columns into Dogri's slice for Dogri tokenizer pieces whose (script-mapped) string also exists in the donor's tokenizer (`tone_donor.translit` maps Gurmukhi and Bengali to Devanagari by Unicode offset); blank copied; unmatched Dogri tokens stay Xavier-random. 0.25 h and 1 h, 3 seeds. Regression check: `donor-hi` reproduces the earlier `hindi` arm (CER 0.193, tone CER 0.241 vs 0.243, 168 tokens copied).
+
+Means over 3 seeds (tone CER = ह and its virama):
+
+| budget | donor | tokens copied | CER | tone CER | aspirate | plain |
+|---|---|---|---|---|---|---|
+| 0.25 h | random | 0 | 0.185 | 0.175 | 0.272 | 0.109 |
+| 0.25 h | Hindi | 168 | 0.193 | 0.243 | 0.218 | 0.130 |
+| 0.25 h | Marathi | 149 | 0.197 | 0.249 | 0.255 | 0.129 |
+| 0.25 h | Nepali | 144 | 0.197 | 0.230 | 0.174 | 0.134 |
+| 0.25 h | Bengali | 143 | 0.202 | 0.242 | 0.219 | 0.125 |
+| 0.25 h | Punjabi (tonal) | 140 | 0.205 | 0.244 | 0.177 | 0.130 |
+| 1 h | random | 0 | 0.162 | 0.135 | 0.178 | 0.084 |
+| 1 h | Hindi | 168 | 0.166 | 0.155 | 0.176 | 0.094 |
+| 1 h | Marathi | 149 | 0.167 | 0.152 | 0.209 | 0.098 |
+| 1 h | Nepali | 144 | 0.166 | 0.143 | 0.190 | 0.095 |
+| 1 h | Bengali | 143 | 0.168 | 0.151 | 0.196 | 0.094 |
+| 1 h | Punjabi (tonal) | 140 | 0.169 | 0.152 | 0.170 | 0.094 |
+
+Findings:
+1. Every copied donor head, tonal or not, same script or not, raises tone-character CER over random init by a similar amount (about +0.06 to +0.07 at 0.25 h; +0.01 to +0.02 at 1 h). The tonal donor (Punjabi) is not better than the non-tonal donors. H3 (a tonal donor wins at low data) is not supported for Dogri on this backbone, and the Hindi-specific reading of the Hindi result is withdrawn: it is a property of copying a donor head into Dogri's slice.
+2. Exploratory (this explanation was formed after seeing the results, from `data/vocab_pieces.json`): of Dogri's 256 pieces, 12 contain ह and 6 contain ह plus virama (`ह्`, `ह्ल`, `▁एह्`, `▁ओह्`, `ाह्`, `▁आह्ल`). No donor vocabulary matches any ह-virama piece, and tone-bearing pieces are matched at 25-42% (4/12 Hindi, 4/12 Marathi, 3/12 Nepali, 5/12 Punjabi, 3/12 Bengali) against 55-66% of all pieces. So donor copying gives trained weights to ordinary tokens and leaves the tone-bearing ones at random init, which would disadvantage exactly those tokens. This predicts that a better fill of the unmatched tokens removes the penalty. Next run tests that (fill strategies below).
+3. Limits: this is head-only copying on a frozen encoder, Dogri only, tone from spelling, piece matching by string (script mapping approximate), and the token-coverage explanation is not yet tested.
