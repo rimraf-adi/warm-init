@@ -122,3 +122,6 @@ Punjabi as a simulated low-resource target (own head discarded), Bodo, Manipuri,
 - The test set is IndicVoices `valid` split by speaker, which is not audited against the model's training data.
 - Dogri's apostrophe tone mark cannot be tested with this vocabulary.
 - Tone is defined from spelling, not from acoustic measurement. A grammar or speaker check is still pending.
+
+### 2026-10-13: head-only training speed fix (implementation note, same protocol)
+Per-epoch model selection used the full metric with a pure-Python edit-distance alignment (four calls per dev check), which made a 1 h run take about 10 minutes. It now uses the C `editdistance` package for plain dev CER (`fast_cer`); `tests/test_fast_cer.py` checks it equals the full metric's edit count on 500 random pairs (run in the WSL env). Protocol is unchanged: AdamW lr 1e-3, batch 16, 40 epochs, best dev[:300] CER. The `impl` field in `results/runs.jsonl` marks which version produced a run (v1 = no field, v2 = gpu-cached, v3 = fast dev CER). Runs from different versions were kept and are comparable by protocol; only speed differs. The grid was restarted once at this point; completed runs were skipped.
