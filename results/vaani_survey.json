@@ -658,5 +658,49 @@
     15
    ]
   ]
+ },
+ "Maithili": {
+  "rows": 150,
+  "hours": 0.325,
+  "scripts": [
+   [
+    "DEVANAGARI",
+    7132
+   ]
+  ],
+  "top_tags": [
+   [
+    "<noise>",
+    63
+   ],
+   [
+    "</noise>",
+    63
+   ],
+   [
+    "[inhaling]",
+    55
+   ],
+   [
+    "[unintelligible]",
+    29
+   ],
+   [
+    "[breathing]",
+    29
+   ],
+   [
+    "<pause>",
+    19
+   ],
+   [
+    "<static_noise>",
+    11
+   ],
+   [
+    "</static_noise>",
+    11
+   ]
+  ]
  }
 }
