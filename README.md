@@ -24,6 +24,9 @@ As of 2026-10-13. Phase 0 (set-up) is mostly done and Phase 1 (the kill test for
 - Data access works for VAANI and IndicVoices by streaming, and all 22 monolingual and the multilingual IndicConformer checkpoints are readable.
 - Backbone: `ai4bharat/IndicConformer` (NeMo, 628M parameters, 24-block encoder, 22 languages). The 115M Hindi-only checkpoint is used as a baseline backbone.
 - Preliminary signals (not conclusions) are in NOTES.md. Hypotheses H1-H5 are untested; the statistics have not been run.
+- Running now: (1) the head-only Phase 1 grid on the Hindi-only encoder (random vs Hindi-copied Dogri head, 0.25/1/5 h, 3 seeds; 10 of 18 runs logged); (2) feature extraction for Dogri with the multilingual encoder (`BACKBONE=multi`, output in WSL `/home/vnit/data/dogri_multi`).
+- Next: head-only arms on the multilingual encoder (random, Hindi head, own Dogri head as upper bound, Punjabi head), then encoder adapters with donor initialization, then layer-wise tone probes (H1).
+- Not done yet: a Dogri tone check against a reference grammar or speaker; the statistical tests; Punjabi/Bodo/Manipuri targets; the mixed-effects model across languages.
 
 ## Repository layout
 
