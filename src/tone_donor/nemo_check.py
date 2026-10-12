@@ -28,7 +28,7 @@ def main(code, iv_lang, n):
     repo = f"ai4bharat/indicconformer_stt_{code}_hybrid_ctc_rnnt_large"
     fname = f"indicconformer_stt_{code}_hybrid_rnnt_large.nemo"
     path = hf_hub_download(repo, fname, token=tok)
-    model = nemo_asr.models.ASRModel.restore_from(path, map_location="cuda").eval()
+    model = nemo_asr.models.EncDecHybridRNNTCTCBPEModel.restore_from(path, map_location="cuda").eval()
     print("loaded", type(model).__name__, "params(M)=", round(sum(p.numel() for p in model.parameters()) / 1e6, 1),
           "encoder(M)=", round(sum(p.numel() for p in model.encoder.parameters()) / 1e6, 1), flush=True)
     print("tokenizer vocab:", model.tokenizer.vocab_size if hasattr(model, "tokenizer") else "n/a", flush=True)
