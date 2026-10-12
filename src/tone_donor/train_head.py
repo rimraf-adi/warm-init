@@ -49,7 +49,8 @@ def build_head(model, init, seed):
     if init == "own":
         newW, newb = W[cols_d, :, 0].clone(), b[cols_d].clone()
         copied = len(sp_d)
-    base, _, fill = init.partition("+")          # e.g. donor-pa+mean, donor-pa+comp
+    base, *flags = init.split("+")               # e.g. donor-pa+comp, donor-hi+noblank, donor-pa+comp+noblank
+    fill = "comp" if "comp" in flags else ("mean" if "mean" in flags else "")
     donor = "hi" if base == "hindi" else (base.split("-", 1)[1] if base.startswith("donor-") else None)
     if donor:
         cols_s = lang_columns(model, donor)
@@ -64,8 +65,9 @@ def build_head(model, init, seed):
                 newb[j] = b[src]
                 matched.append(j)
                 copied += 1
-        newW[-1] = W[cols_s[-1], :, 0]
-        newb[-1] = b[cols_s[-1]]
+        if "noblank" not in flags:
+            newW[-1] = W[cols_s[-1], :, 0]
+            newb[-1] = b[cols_s[-1]]
         if fill in ("mean", "comp"):
             mW, mb = newW[matched].mean(0), newb[matched].mean(0)
             mset = set(matched)

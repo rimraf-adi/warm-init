@@ -205,3 +205,14 @@ Findings:
 1. Every copied donor head, tonal or not, same script or not, raises tone-character CER over random init by a similar amount (about +0.06 to +0.07 at 0.25 h; +0.01 to +0.02 at 1 h). The tonal donor (Punjabi) is not better than the non-tonal donors. H3 (a tonal donor wins at low data) is not supported for Dogri on this backbone, and the Hindi-specific reading of the Hindi result is withdrawn: it is a property of copying a donor head into Dogri's slice.
 2. Exploratory (this explanation was formed after seeing the results, from `data/vocab_pieces.json`): of Dogri's 256 pieces, 12 contain ह and 6 contain ह plus virama (`ह्`, `ह्ल`, `▁एह्`, `▁ओह्`, `ाह्`, `▁आह्ल`). No donor vocabulary matches any ह-virama piece, and tone-bearing pieces are matched at 25-42% (4/12 Hindi, 4/12 Marathi, 3/12 Nepali, 5/12 Punjabi, 3/12 Bengali) against 55-66% of all pieces. So donor copying gives trained weights to ordinary tokens and leaves the tone-bearing ones at random init, which would disadvantage exactly those tokens. This predicts that a better fill of the unmatched tokens removes the penalty. Next run tests that (fill strategies below).
 3. Limits: this is head-only copying on a frozen encoder, Dogri only, tone from spelling, piece matching by string (script mapping approximate), and the token-coverage explanation is not yet tested.
+
+### 2026-10-13: fill-strategy test of the token-coverage explanation (not supported)
+Test: for donors Hindi and Punjabi, Dogri tokens the donor lacks are filled with the donor's mean row (`+mean`) or the mean of the donor rows for the piece's characters (`+comp`, falling back to the mean row), instead of staying random. 0.25 h and 1 h, 3 seeds. Tone CER (mean of 3 seeds, seed sd about 0.001-0.003):
+
+| budget | random | donor-hi | donor-hi+mean | donor-hi+comp | donor-pa | donor-pa+mean | donor-pa+comp |
+|---|---|---|---|---|---|---|---|
+| 0.25 h | 0.175 | 0.243 | 0.256 | 0.232 | 0.244 | 0.258 | 0.238 |
+| 1 h | 0.135 | 0.155 | 0.158 | 0.148 | 0.152 | 0.160 | 0.156 |
+
+CER at 0.25 h: random 0.185, donor-hi 0.193 / +mean 0.196 / +comp 0.189, donor-pa 0.205 / +mean 0.209 / +comp 0.206.
+Reading (mine): composition fill lowers tone CER by about 0.01 and mean fill raises it by about 0.01, but none closes the roughly 0.06 gap to random init. The exploratory explanation that unmatched (tone-bearing) tokens at random init cause the penalty is therefore not supported as the main cause. Candidates not yet tested: the copied blank column, the scale of copied rows versus random rows, and interference between the donor's rows and the Dogri-specific directions the multilingual encoder already contains (Dogri was in its training). The tonal donor still does no better than the non-tonal ones in any fill setting.
