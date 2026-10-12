@@ -29,6 +29,12 @@ As of 2026-10-13. Phase 0 (set-up) is mostly done and Phase 1 (the kill test for
 - Next (detail and decision rules in NOTES.md, section "Roadmap after the head-only runs"): analyse the head-only runs; zero-shot sweep of all 22 language heads per target; head-only arms on the multilingual encoder (random, Hindi, Punjabi, own head as upper bound); encoder adapters with donor initialization; layer-wise tone probes (H1); more targets and non-tonal controls (H3, H4).
 - Not done yet: a Dogri tone check against a reference grammar or speaker; the statistical tests; Punjabi/Bodo/Manipuri targets; the mixed-effects model across languages.
 
+## Data
+
+- Source: IndicVoices (`ai4bharat/IndicVoices`), Dogri first. Splits are materialised locally by `tone_donor.make_splits`: manifests (tracked) in `data/manifests/`, 16 kHz audio (gitignored) in `data/audio/`. Data budget: 50 GB in total.
+- VAANI (`ARTPARK-IISc/VAANI`) is not used in experiments for now (only surveyed; see NOTES.md). It may come back for SSL-based learning.
+- Text fields: manifests keep `text`, `verbatim`, `normalized` and the unsanitized versions; which field is scored is recorded in NOTES.md.
+
 ## Repository layout
 
 ```

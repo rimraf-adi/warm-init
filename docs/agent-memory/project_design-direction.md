@@ -13,3 +13,5 @@ User said (2026-10-13): use the multilingual IndicConformer as the backbone ("we
 **Why:** the single-language `hi` checkpoint cannot test family effects at inference. Head-only runs on that encoder are only a baseline.
 
 **How to apply:** build experiments on the multilingual model (candidate: `ai4bharat/IndicConformer`, 2.5 GB NeMo file, openly readable with the project token; the `indic-conformer-600m-multilingual` repo is ONNX only). Use per-language checkpoints (gated except `hi`; account owner must accept terms) or the multilingual model's own heads as donors. Report claims per backbone and never describe `hi`-checkpoint results as multilingual results.
+
+Data decisions (2026-10-13): always download and use data locally, up to 50 GB total; do not guess data fields, keep split manifests in git. Skip VAANI for now (revisit for SSL-based learning). After the Dogri splits finish downloading, restart the stopped head-only grid myself (`scripts/run_phase1.sh`, it skips logged runs).
