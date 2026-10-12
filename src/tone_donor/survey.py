@@ -1,5 +1,5 @@
 """Phase 0: sample each pool language from VAANI (streaming) and record script,
-transcript tags and sampled hours. Writes results/vaani_survey.json."""
+transcript tags and sampled hours. Writes results/phase0/vaani_survey.json."""
 import json
 import re
 import sys
@@ -50,5 +50,5 @@ if __name__ == "__main__":
         except Exception as e:
             out[lang] = {"error": f"{type(e).__name__}: {str(e)[:150]}"}
             print(lang, "ERROR", out[lang]["error"], flush=True)
-        json.dump(out, open("results/vaani_survey.json", "w", encoding="utf-8"),
+        json.dump(out, open("results/phase0/vaani_survey.json", "w", encoding="utf-8"),
                   ensure_ascii=False, indent=1)

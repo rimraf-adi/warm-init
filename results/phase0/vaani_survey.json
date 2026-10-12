@@ -350,5 +350,49 @@
     2
    ]
   ]
+ },
+ "Garhwali": {
+  "rows": 150,
+  "hours": 0.241,
+  "scripts": [
+   [
+    "DEVANAGARI",
+    5622
+   ]
+  ],
+  "top_tags": [
+   [
+    "<noise>",
+    51
+   ],
+   [
+    "</noise>",
+    51
+   ],
+   [
+    "[breathing]",
+    47
+   ],
+   [
+    "[unintelligible]",
+    10
+   ],
+   [
+    "{photo}",
+    9
+   ],
+   [
+    "{color}",
+    5
+   ],
+   [
+    "{building}",
+    5
+   ],
+   [
+    "{car}",
+    5
+   ]
+  ]
  }
 }
