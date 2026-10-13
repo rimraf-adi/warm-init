@@ -16,7 +16,7 @@ import editdistance
 import torch
 
 from tone_donor.prep_features import backbone_name, load_encoder
-from tone_donor.runlog import log_run
+from tone_donor.runlog import log_run, read_runs
 from tone_donor.text import normalize, tone_cer
 from tone_donor.translit import BLOCK_START, DEVANAGARI_LANGS, to_devanagari
 from tone_donor.vaani_stream import _load_dotenv
@@ -58,22 +58,30 @@ def main(data_dir, split):
     feats = [it["feat"].cuda() for it in items]
     refs = [it["text"] for it in items]
     res = {}
+    done = {r["donor"] for r in read_runs() if r["stage"] == "step1-zero-shot" and r["status"] == "done"}
+    hyp_dir = f"results/phase1/zero_shot_hyps_dogri_{split}"
+    os.makedirs(hyp_dir, exist_ok=True)
     for lang in model.tokenizer.tokenizers_dict:
         hyp_raw = decode(model, lang, feats)
         row = {"family": FAMILY.get(lang, ("?", "?"))[0], "tonal": FAMILY.get(lang, ("?", "?"))[1]}
         if lang in SCORABLE:
             hyp = [normalize(to_devanagari(h, lang), drop_apos=True) for h in hyp_raw]
+            with open(f"{hyp_dir}/{lang}.jsonl", "w", encoding="utf-8") as f:
+                for r, h in zip(refs, hyp):
+                    f.write(json.dumps({"ref": r, "hyp": h}, ensure_ascii=False) + "
+")
             m = tone_cer(list(zip(refs, hyp)), "dogri", "ha")
             e = sum(editdistance.eval(r, h) for r, h in zip(refs, hyp))
             we = sum(editdistance.eval(r.split(), h.split()) for r, h in zip(refs, hyp))
             row.update(scorable=True, cer=e / sum(len(r) for r in refs), wer=we / sum(len(r.split()) for r in refs),
                        tone_cer=m["tone_cer"], example=hyp[0][:80])
-            log_run(stage="step1-zero-shot", hypothesis="family", target="dogri", donor=lang, init=f"zero-shot-head-{lang}",
-                    backbone="indicconformer_multi_frozen_encoder" if backbone_name() == "multi" else "indicconformer_hi_frozen_encoder",
-                    split=f"speaker-disjoint {split}", n_utts=len(items), cer=row["cer"], wer=row["wer"],
-                    tone_cer=row["tone_cer"], tone_chars=m["tone_chars"],
-                    config={"decode": "greedy CTC on cached final-layer features", "script_map": "unicode offset to Devanagari"},
-                    notes="no training; output mapped to Devanagari by offset, so cross-script rows are approximate")
+            if lang not in done:
+              log_run(stage="step1-zero-shot", hypothesis="family", target="dogri", donor=lang, init=f"zero-shot-head-{lang}",
+                      backbone="indicconformer_multi_frozen_encoder" if backbone_name() == "multi" else "indicconformer_hi_frozen_encoder",
+                      split=f"speaker-disjoint {split}", n_utts=len(items), cer=row["cer"], wer=row["wer"],
+                      tone_cer=row["tone_cer"], tone_chars=m["tone_chars"],
+                      config={"decode": "greedy CTC on cached final-layer features", "script_map": "unicode offset to Devanagari"},
+                      notes="no training; output mapped to Devanagari by offset, so cross-script rows are approximate")
         else:
             row.update(scorable=False, example=hyp_raw[0][:80])
         res[lang] = row
