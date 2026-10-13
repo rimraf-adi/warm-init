@@ -34,13 +34,13 @@ def draw_speakers(train, hours, seed):
             break
         sel.extend(by[s])
         tot += sum(it["dur"] for it in by[s])
-    return sel, tot, sum(1 for s in spk if any(it in sel for it in by[s][:1])) if False else None
+    return sel, tot
 
 
 def train_one(model, data, init, hours, seed):
     train, dev, test = data
     random.seed(seed)
-    sel, tot, _ = draw_speakers(train, hours, seed)
+    sel, tot = draw_speakers(train, hours, seed)
     nspk = len({it["speaker"] for it in sel})
     dev_sel = dev[::max(len(dev) // 300, 1)][:300]
     head, copied, nd = build_head(model, init, seed)
