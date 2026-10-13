@@ -105,7 +105,7 @@ def extract(model, wavs, aligned, rows, keep_ids, cap, rng, bs=8):
                 continue
             ids, frames = a
             T = int(elen[k])
-            sel = [j for j, t in enumerate(ids) if t in keep_ids or rng.random() < cap]
+            sel = [j for j, t in enumerate(ids) if t in keep_ids or ((i + k) * 7919 + j * 104729) % 10007 < cap * 10007]
             if not sel:
                 continue
             fr = torch.tensor([frames[j] for j in sel], device="cuda").clamp(0, T - 1)
@@ -172,6 +172,15 @@ def main(codes):
         del model, Xtr, Xte
         torch.cuda.empty_cache()
 
+    os.makedirs("data", exist_ok=True)
+    np.savez_compressed("data/probe_v2_scores.npz", **{f"{c}|{t}|{li}": scores[c][t]["layers"][li]
+                        for c in scores for t in scores[c] for li in range(len(scores[c][t]["layers"]))},
+                        **{f"y|{t}": scores[codes[0]][t]["y"] for t in scores[codes[0]]},
+                        **{f"spk|{t}": scores[codes[0]][t]["spk"] for t in scores[codes[0]]})
+    # every encoder must have scored exactly the same test tokens in each task
+    for t in scores[codes[0]]:
+        for c in codes:
+            assert np.array_equal(scores[c][t]["y"], scores[codes[0]][t]["y"]) and np.array_equal(scores[c][t]["spk"], scores[codes[0]][t]["spk"]), (c, t)
     # speaker-cluster bootstrap, same resamples for every encoder within a task
     out = {"meta": {f"{c}|{t}": v for (c, t), v in meta.items()}, "auc": {}, "diff_vs_hi": {}}
     np_rng = np.random.default_rng(0)
