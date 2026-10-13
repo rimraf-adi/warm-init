@@ -3,8 +3,9 @@
 Fixes over v1: (1) the main contrast is tone-mark token (Dogri piece with ha+virama) vs ORDINARY-ha token (piece with
 ha but no virama), so the consonant is held constant; a second contrast (any consonant+virama piece other than ha vs
 plain consonant pieces) controls for 'virama conjunct' detection in general; the original 'tone-mark vs all other
-tokens' task is kept for continuity. (2) frames are aligned with the multilingual model's Dogri CTC head (a model that
-is not one of the monolingual encoders compared), and the feature is the mean of the emission frame and its two
+tokens' task is kept for continuity. (2) frames are aligned with the CTC head of the aligner model named by ALIGNER (default doi, a monolingual
+model: a CTC aligner's emission timing is specific to the model family, and the first attempt with the multilingual
+aligner gave chance-level probes for every monolingual encoder because of a timing mismatch), and the feature is the mean of the emission frame and its two
 neighbours (indices clamped to the utterance length; the clamp fixes the v1 CUDA assert). (3) 95% CIs by
 speaker-cluster bootstrap on the test tokens; paired differences between encoders use the same resamples.
 The multilingual encoder is included but flagged: it produced the alignments.
@@ -142,7 +143,9 @@ def main(codes):
     rng = random.Random(0)
     tr_rows, te_rows = read("train", TRAIN_H), read("test", TEST_H)
     tr_w, te_w = load_wavs(tr_rows), load_wavs(te_rows)
-    aligner = load_model("multi", tok)
+    aligner_code = os.environ.get("ALIGNER", "doi")
+    aligner = load_model(aligner_code, tok)
+    print("aligner:", aligner_code, flush=True)
     tone, plain_ha, conj, plain_c = piece_classes(aligner)
     keep = tone | plain_ha | conj | plain_c
     print("pieces: tone", len(tone), "plain-ha", len(plain_ha), "conj", len(conj), "plain-consonant", len(plain_c), flush=True)
@@ -173,7 +176,7 @@ def main(codes):
         torch.cuda.empty_cache()
 
     os.makedirs("data", exist_ok=True)
-    np.savez_compressed("data/probe_v2_scores.npz", **{f"{c}|{t}|{li}": scores[c][t]["layers"][li]
+    np.savez_compressed(f"data/probe_v2_scores_{aligner_code}.npz", **{f"{c}|{t}|{li}": scores[c][t]["layers"][li]
                         for c in scores for t in scores[c] for li in range(len(scores[c][t]["layers"]))},
                         **{f"y|{t}": scores[codes[0]][t]["y"] for t in scores[codes[0]]},
                         **{f"spk|{t}": scores[codes[0]][t]["spk"] for t in scores[codes[0]]})
@@ -215,7 +218,7 @@ def main(codes):
                 out["diff_vs_hi"][task][c] = {"diff": float(np.mean(auc[c][0][-4:]) - np.mean(auc["hi"][0][-4:])),
                                               "ci": [float(np.percentile(dd, 2.5)), float(np.percentile(dd, 97.5))]}
     os.makedirs("results/phase2", exist_ok=True)
-    json.dump(out, open("results/phase2/probe_layers_v2.json", "w"), indent=1)
+    json.dump(out, open(f"results/phase2/probe_layers_v2_{aligner_code}.json", "w"), indent=1)
     for task, d in out["auc"].items():
         print("TASK", task)
         for c, v in d.items():
