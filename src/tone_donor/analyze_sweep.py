@@ -19,7 +19,12 @@ def load(path):
         err, edits = _align(d["ref"], d["hyp"])
         tp = tone_positions(d["ref"], "dogri", "ha")
         ap = {i for i, ch in enumerate(d["ref"]) if ch in ASPIRATES_DEVANAGARI}
-        out.append((edits, len(d["ref"]), sum(err[i] for i in tp), len(tp), sum(err[i] for i in ap), len(ap)))
+        ref = d["ref"]
+        mark = {i for i, ch in enumerate(ref) if ch == "ह" and ref[i + 1:i + 2] == "्"}
+        mark |= {i + 1 for i in mark}                       # ha + virama as a tone mark
+        plain = {i for i, ch in enumerate(ref) if ch == "ह" and ref[i + 1:i + 2] != "्"}   # ordinary ha
+        out.append((edits, len(ref), sum(err[i] for i in tp), len(tp), sum(err[i] for i in ap), len(ap),
+                    sum(err[i] for i in mark), len(mark), sum(err[i] for i in plain), len(plain)))
     return out
 
 
@@ -31,7 +36,8 @@ def rate(rows, k):
 
 def m(rows):
     return (sum(r[0] for r in rows) / sum(r[1] for r in rows), sum(r[2] for r in rows) / sum(r[3] for r in rows),
-            sum(r[4] for r in rows) / sum(r[5] for r in rows))
+            sum(r[4] for r in rows) / sum(r[5] for r in rows), sum(r[6] for r in rows) / sum(r[7] for r in rows),
+            sum(r[8] for r in rows) / sum(r[9] for r in rows))
 
 
 def ci(v):
@@ -67,6 +73,20 @@ def main(split="test", B=2000):
             row.append((pl[k] - ph[k], lo, hi))
         res[l] = row
         print(f"| {l} | " + " | ".join(f"{x:+.3f} [{lo:+.3f}, {hi:+.3f}]" for x, lo, hi in row) + " |")
+    print()
+    print("Split of the tone-character set: ha+virama tone mark vs ordinary ha (head minus hi, paired):")
+    print()
+    print("| head | tone-mark CER [95% CI] | ordinary-ha CER [95% CI] | d tone-mark vs hi | d ordinary-ha vs hi |")
+    print("|---|---|---|---|---|")
+    for l in ["hi", "pa", "mai", "mr", "ne", "bn", "doi"]:
+        pt = m(data[l])
+        c3 = ci([b[3] for b in boots[l]])
+        c4 = ci([b[4] for b in boots[l]])
+        d3 = ci([boots[l][b][3] - boots["hi"][b][3] for b in range(B)])
+        d4 = ci([boots[l][b][4] - boots["hi"][b][4] for b in range(B)])
+        print(f"| {l} | {pt[3]:.3f} [{c3[0]:.3f}, {c3[1]:.3f}] | {pt[4]:.3f} [{c4[0]:.3f}, {c4[1]:.3f}] | "
+              f"{pt[3]-ph[3]:+.3f} [{d3[0]:+.3f}, {d3[1]:+.3f}] | {pt[4]-ph[4]:+.3f} [{d4[0]:+.3f}, {d4[1]:+.3f}] |")
+    print("positions: tone-mark", sum(r[7] for r in data["hi"]), " ordinary ha", sum(r[9] for r in data["hi"]))
     json.dump(res, open(f"results/phase1/zero_shot_sweep_ci_{split}.json", "w"), indent=1)
 
 

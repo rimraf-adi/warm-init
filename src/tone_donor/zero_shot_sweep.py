@@ -68,8 +68,7 @@ def main(data_dir, split):
             hyp = [normalize(to_devanagari(h, lang), drop_apos=True) for h in hyp_raw]
             with open(f"{hyp_dir}/{lang}.jsonl", "w", encoding="utf-8") as f:
                 for r, h in zip(refs, hyp):
-                    f.write(json.dumps({"ref": r, "hyp": h}, ensure_ascii=False) + "
-")
+                    f.write(json.dumps({"ref": r, "hyp": h}, ensure_ascii=False) + "\n")
             m = tone_cer(list(zip(refs, hyp)), "dogri", "ha")
             e = sum(editdistance.eval(r, h) for r, h in zip(refs, hyp))
             we = sum(editdistance.eval(r.split(), h.split()) for r, h in zip(refs, hyp))

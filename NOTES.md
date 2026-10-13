@@ -265,3 +265,25 @@ Reading (mine):
 2. Tonal Punjabi has by far the lowest tone-character error among the non-own heads (0.516 vs 0.654 for Hindi and 0.67-0.89 for the others) although its overall CER is slightly worse than Hindi's (0.361 vs 0.338). This is the first result in favour of the tone-aware donor idea, on the inference side, and it points the opposite way from the head-copy results (where all donors were alike).
 3. Tonality alone does not explain it: Bodo (tonal, Tibeto-Burman, Devanagari script) decodes poorly (CER 0.550, tone CER 0.772). Closeness to Dogri (Western Pahari / Punjabi area) seems to matter more, which is why the plan separates tone from relatedness (H4).
 Caveats: single run per head and no confidence intervals (predictions were not saved; rerun with saved hypotheses before any claim); Gurmukhi is mapped to Devanagari by code-point offset, and Punjabi writes tone through consonant letters (the voiced aspirates and ha), not through a ha-virama sequence, so the tone-character score for the Punjabi head depends on how that mapping lines up with Dogri's ha-virama spelling; tonal labels are general knowledge and unverified; Dogri was seen by the model.
+
+### 2026-10-13: zero-shot sweep with confidence intervals and tone-mark split (`python -m tone_donor.analyze_sweep test`; hypotheses saved in `results/phase1/zero_shot_hyps_dogri_test/`, CIs in `zero_shot_sweep_ci_test.json`)
+Bootstrap over the 969 test utterances (2,000 draws, paired against the Hindi head). CER / tone CER (ह and its virama) with 95% CIs: own doi 0.145 [0.137, 0.154] / 0.113 [0.101, 0.126]; hi 0.338 [0.331, 0.345] / 0.654 [0.637, 0.670]; pa 0.361 [0.354, 0.368] / 0.516 [0.501, 0.529]; mai 0.364 / 0.691; mr 0.390 / 0.671; ne 0.426 / 0.706; bn 0.454 / 0.761; brx 0.550 / 0.772; kn 0.490 / 0.739.
+Paired difference to Hindi: Punjabi CER +0.023 [+0.019, +0.026] (slightly worse), tone CER -0.138 [-0.150, -0.124] (clearly better), aspirate-letter CER +0.025 [-0.003, +0.056] (no difference). Every other head is worse than Hindi on tone CER (+0.018 to +0.134).
+
+Split of the tone-character set (the earlier "tone characters" counted every ha, including ordinary consonant uses): ha followed by virama and that virama (the tone-mark spelling, 3,072 positions) vs ha not followed by a virama (ordinary consonant, 1,780 positions):
+
+| head | tone-mark CER [95% CI] | ordinary-ha CER [95% CI] | tone-mark d vs hi | ordinary-ha d vs hi |
+|---|---|---|---|---|
+| hi | 0.877 [0.865, 0.887] | 0.269 [0.246, 0.292] | 0 | 0 |
+| pa | 0.668 [0.655, 0.681] | 0.253 [0.230, 0.276] | -0.209 [-0.224, -0.193] | -0.015 [-0.035, +0.006] |
+| mai | 0.929 [0.919, 0.939] | 0.279 [0.257, 0.302] | +0.052 [+0.042, +0.063] | +0.011 [-0.007, +0.029] |
+| mr | 0.901 [0.891, 0.911] | 0.275 [0.251, 0.299] | +0.024 [+0.014, +0.036] | +0.007 [-0.016, +0.030] |
+| ne | 0.909 [0.899, 0.919] | 0.356 [0.331, 0.380] | +0.033 [+0.020, +0.045] | +0.087 [+0.065, +0.108] |
+| bn | 0.962 [0.955, 0.968] | 0.414 [0.387, 0.440] | +0.085 [+0.074, +0.096] | +0.146 [+0.122, +0.168] |
+| doi (own) | 0.117 [0.100, 0.133] | 0.108 [0.092, 0.125] | -0.760 | -0.161 |
+
+Reading (mine):
+1. The Punjabi head's advantage over every non-tonal head sits on the ha-plus-virama tone-mark positions (0.668 vs 0.877 for Hindi). On ordinary ha it is not different from Hindi (-0.015, CI includes 0). So it is not general ha recognition. Non-tonal Devanagari heads almost never produce the tone-mark spelling (CER 0.88-0.93 on those positions).
+2. This is the clearest result so far in favour of a tone-related family effect, on the inference side: a zero-shot head of a related tonal language recovers tone-mark spelling that non-tonal heads miss.
+3. What it does not show: (a) whether the Punjabi head is acoustically sensitive to tone or just writes ha-plus-virama-like sequences by orthographic habit; Gurmukhi's script has its own ha spellings (its subjoined ha is virama then ha, not ha then virama), and the offset mapping may reward or penalise sequences differently from Dogri's spelling; (b) whether closeness to Dogri (Punjabi-Dogri dialect area) rather than tone drives it, which needs a related non-tonal head or an unrelated tonal head (Bodo is tonal but decodes badly overall); (c) generality beyond Dogri. Tonal status of languages is general knowledge, not checked against a grammar.
+4. Own head still far ahead (tone-mark CER 0.117), as expected for a trained and seen language.
