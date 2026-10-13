@@ -51,15 +51,16 @@ def decode(model, lang, feats):
     return out
 
 
-def main(data_dir, split):
+def main(data_dir, split, tag=""):
     _load_dotenv()
     model = load_encoder(os.environ["HF_TOKEN"])
     items = torch.load(os.path.join(data_dir, f"{split}.pt"))
     feats = [it["feat"].cuda() for it in items]
     refs = [it["text"] for it in items]
     res = {}
-    done = {r["donor"] for r in read_runs() if r["stage"] == "step1-zero-shot" and r["status"] == "done"}
-    hyp_dir = f"results/phase1/zero_shot_hyps_dogri_{split}"
+    stage = "step1-zero-shot" + (f"-{tag}" if tag else "")
+    done = {r["donor"] for r in read_runs() if r["stage"] == stage and r["status"] == "done"}
+    hyp_dir = f"results/phase1/zero_shot_hyps_dogri{'_' + tag if tag else ''}_{split}"
     os.makedirs(hyp_dir, exist_ok=True)
     for lang in model.tokenizer.tokenizers_dict:
         hyp_raw = decode(model, lang, feats)
@@ -67,15 +68,15 @@ def main(data_dir, split):
         if lang in SCORABLE:
             hyp = [normalize(to_devanagari(h, lang), drop_apos=True) for h in hyp_raw]
             with open(f"{hyp_dir}/{lang}.jsonl", "w", encoding="utf-8") as f:
-                for r, h in zip(refs, hyp):
-                    f.write(json.dumps({"ref": r, "hyp": h}, ensure_ascii=False) + "\n")
+                for r, h, it in zip(refs, hyp, items):
+                    f.write(json.dumps({"ref": r, "hyp": h, "speaker": it.get("speaker")}, ensure_ascii=False) + "\n")
             m = tone_cer(list(zip(refs, hyp)), "dogri", "ha")
             e = sum(editdistance.eval(r, h) for r, h in zip(refs, hyp))
             we = sum(editdistance.eval(r.split(), h.split()) for r, h in zip(refs, hyp))
             row.update(scorable=True, cer=e / sum(len(r) for r in refs), wer=we / sum(len(r.split()) for r in refs),
                        tone_cer=m["tone_cer"], example=hyp[0][:80])
             if lang not in done:
-              log_run(stage="step1-zero-shot", hypothesis="family", target="dogri", donor=lang, init=f"zero-shot-head-{lang}",
+              log_run(stage=stage, hypothesis="family", target="dogri", donor=lang, init=f"zero-shot-head-{lang}",
                       backbone="indicconformer_multi_frozen_encoder" if backbone_name() == "multi" else "indicconformer_hi_frozen_encoder",
                       split=f"speaker-disjoint {split}", n_utts=len(items), cer=row["cer"], wer=row["wer"],
                       tone_cer=row["tone_cer"], tone_chars=m["tone_chars"],
@@ -85,8 +86,8 @@ def main(data_dir, split):
             row.update(scorable=False, example=hyp_raw[0][:80])
         res[lang] = row
         print(lang, {k: (round(v, 3) if isinstance(v, float) else v) for k, v in row.items() if k != "example"}, flush=True)
-    json.dump(res, open(f"results/phase1/zero_shot_sweep_dogri_{split}.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    json.dump(res, open(f"results/phase1/zero_shot_sweep_dogri{'_' + tag if tag else ''}_{split}.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 
 
 if __name__ == "__main__":
-    main(sys.argv[1], sys.argv[2])
+    main(sys.argv[1], sys.argv[2], sys.argv[3] if len(sys.argv) > 3 else "")
