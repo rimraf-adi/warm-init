@@ -326,3 +326,33 @@ Difference to Hindi (tone mark vs ordinary ha / control / difference of differen
 P5 as pre-registered (Punjabi AUC above Hindi on the tone-mark vs ordinary-ha contrast with CI excluding zero at the top layers): met (+0.016 [+0.007, +0.025]). But the control shows the same gain (+0.019), and the difference of differences is -0.003 [-0.012, +0.006], so the Punjabi encoder's advantage is not specific to the tone mark: it is better than Hindi's at representing virama-bearing tokens in general, with no extra on tone. The own Dogri encoder also shows no tone-specific excess. Conclusion: H1 (tonal-donor encoders keep more tone-specific information in upper layers) is not supported on Dogri with this probe; what the data show is a general encoder-quality ordering (own > Punjabi > Marathi, Hindi, Bengali > Nepali) that follows closeness to Dogri more than tonality.
 Caveats: token identity is still partly confounded (3 tone pieces vs 10 ordinary-ha pieces); one probe fit per layer and encoder; the monolingual tokenizer has 3 tone pieces whereas the multilingual model's Dogri tokenizer has 6 (the two tokenizers differ, which matters for any claim that compares tokenizations); multilingual encoder not probed here (its CTC timing differs, needs its own alignment run); tonality labels are general knowledge.
 Process note: probe v2's first attempt (aligner = the multilingual model) gave chance-level results for every monolingual encoder because of CTC timing mismatch and was discarded (see earlier entry, file renamed to INVALID_...). An earlier version of the negative-sampling code also gave different token sets per encoder and crashed the bootstrap; fixed with deterministic sampling and an assertion that every encoder scores identical tokens.
+
+### 2026-10-13: v2 confirmatory head-only grid (P1-P3), multilingual encoder, `python -m tone_donor.analyze_v2`, `results/phase1/analysis_v2.json`
+Setup (as pre-registered above): gender-balanced v2 split, 5 seeds per arm, each (budget, seed) a different random set of whole training speakers from the 15 h pool, frozen encoder, head-only, speaker-cluster bootstrap (67 test speakers, 2,000 draws), seeds pooled. 102 of 120 runs at the time of writing; the 0.25 h and 1 h blocks are complete for all 8 arms; the 5 h noblank arms have 1 of 5 seeds and the 5 h comp arms are not run yet (scored when finished). Metric: tone mark = ha plus its virama, ordinary ha reported separately.
+
+Means (CER / tone-mark CER / ordinary-ha CER):
+| arm | 0.25 h | 1 h | 5 h |
+|---|---|---|---|
+| random | 0.183 / 0.157 / 0.177 | 0.155 / 0.145 / 0.123 | 0.148 / 0.142 / 0.119 |
+| donor-hi | 0.191 / 0.246 / 0.190 | 0.161 / 0.166 / 0.133 | 0.153 / 0.149 / 0.133 |
+| donor-pa | 0.202 / 0.252 / 0.221 | 0.164 / 0.169 / 0.139 | 0.153 / 0.146 / 0.129 |
+| donor-mr | 0.194 / 0.241 / 0.204 | 0.161 / 0.168 / 0.134 | 0.152 / 0.152 / 0.133 |
+| donor-hi+noblank | 0.199 / 0.212 / 0.182 | 0.161 / 0.157 / 0.130 | 1 seed |
+| donor-pa+noblank | 0.212 / 0.210 / 0.216 | 0.165 / 0.161 / 0.131 | 1 seed |
+| donor-hi+comp | 0.187 / 0.232 / 0.178 | 0.162 / 0.173 / 0.137 | pending |
+| donor-pa+comp | 0.201 / 0.254 / 0.215 | 0.165 / 0.178 / 0.140 | pending |
+
+Contrasts (A minus B, tone-mark CER with speaker-cluster 95% CI):
+- 0.25 h: hi-random +0.088 [+0.075, +0.104]; pa-random +0.094 [+0.079, +0.114]; mr-random +0.083 [+0.070, +0.099]; pa-hi +0.006 [-0.002, +0.014]; hi minus hi+noblank +0.034 [+0.023, +0.047]; pa minus pa+noblank +0.042 [+0.034, +0.051]; hi+noblank-random +0.055 [+0.041, +0.074]; pa+noblank-random +0.053 [+0.037, +0.075]; hi+comp minus hi -0.014 [-0.028, -0.002]; pa+comp minus pa +0.002 [-0.005, +0.010].
+- 1 h: hi-random +0.022 [+0.014, +0.030]; pa-random +0.024 [+0.013, +0.040]; pa-hi +0.003 [-0.007, +0.014]; blank effect +0.009 [+0.005, +0.013] (hi), +0.008 [+0.003, +0.015] (pa).
+- 5 h: hi-random +0.007 [+0.001, +0.013]; pa-random +0.004 [-0.001, +0.008]; pa-hi -0.003 [-0.008, +0.002].
+- Overall CER, donor minus random: +0.009 / +0.019 / +0.011 (hi / pa / mr) at 0.25 h; +0.006 / +0.009 / +0.006 at 1 h; +0.005 / +0.005 / +0.004 at 5 h, all CIs above zero.
+
+Pre-registered checks (mechanical, at 0.25 h): P1 true, P2 true, P3 true (comp gain below 0.02).
+Reading (mine):
+1. P1 replicated on a different test split, with data-varying seeds: copying a donor head into the Dogri slice raises tone-mark error by about 0.09 at 0.25 h, and the tonal donor is no different from the non-tonal ones (Punjabi minus Hindi +0.006 [-0.002, +0.014]). H3 (tonal donor wins at low data) is not supported for Dogri head copying. The penalty shrinks with data (+0.02 at 1 h, about +0.005 at 5 h).
+2. P2: the donor's blank column accounts for roughly 40% of the tone-mark penalty at 0.25 h (0.034 and 0.042 of about 0.09) and some of it remains with a random blank. Removing the donor blank costs overall CER (+0.008 to +0.010 at 0.25 h), so the blank trades overall accuracy for tone-mark accuracy. A cause of the remaining 0.055 is not identified.
+3. P3 held: composition fill helps the Hindi arm slightly (-0.014) and not the Punjabi arm; token coverage is not the main cause.
+4. No donor head beats random initialisation on overall CER at any budget (random is best, the gap shrinks to 0.004-0.005 at 5 h).
+5. Not pre-registered, to be treated as exploratory: at 0.25 h the Punjabi copy also raises ordinary-ha error more than the Hindi copy (pa-hi +0.031 [+0.012, +0.048]), so the tonal donor is not better on any ha measure.
+Caveats: head-only on a frozen encoder; Dogri seen by the model; gender balance of the new test split by utterance is close to train (58% vs 56% male) but dev is more male (70%); 5 h noblank and comp arms still incomplete; the earlier v1-split results are superseded for citation by these.
